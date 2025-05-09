@@ -5,11 +5,13 @@
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $api_joke from "./routes/api/joke.ts";
+import * as $api_webwunder from "./routes/api/webwunder.ts";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $Inputfield from "./islands/Inputfield.tsx";
 import * as $ResultPage from "./islands/ResultPage.tsx";
+import * as $apicallmethod from "./islands/apicallmethod.ts";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -17,6 +19,7 @@ const manifest = {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
     "./routes/api/joke.ts": $api_joke,
+    "./routes/api/webwunder.ts": $api_webwunder,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
   },
@@ -24,6 +27,7 @@ const manifest = {
     "./islands/Counter.tsx": $Counter,
     "./islands/Inputfield.tsx": $Inputfield,
     "./islands/ResultPage.tsx": $ResultPage,
+    "./islands/apicallmethod.ts": $apicallmethod,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;
