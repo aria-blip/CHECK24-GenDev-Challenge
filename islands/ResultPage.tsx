@@ -1,6 +1,9 @@
 import { useEffect } from "preact/hooks";
 import { useSignal ,Signal} from "@preact/signals";
-import {fetchWebWunderOffers} from "./apicallmethod.ts" // this is the function that will be used to fetch the data from the api
+import {fetchBytemeOffers,fetchWebWunderOffers} from "./apicallmethod.ts" // this is the function that will be used to fetch the data from the api
+import { Product } from "./product.ts";
+import list from "npm:postcss@8.4.35/lib/list";
+import { JSX } from "preact/jsx-runtime";
 
 interface Props {
 
@@ -8,21 +11,56 @@ interface Props {
   }
 
 export default  function ResultPage({value}:Props) {
-  var   listofdata = useSignal([""])
+  var   listofdata:Signal<Product[]> = useSignal([])
 
   useEffect(() => {
       
     async function updatelist() {
-     fetchWebWunderOffers(value.value,"54846DFD9C29D20ACBF9975E770155A7CAA52C6BBC2728294FF961C8F1E9A2D633A8B91A0B04517C24CAB87999120A9558CD748335627DD982DA02D97038E0E0" )
+
+    const results = await Promise.allSettled([
+
+     fetchWebWunderOffers(value.value ).then((data)=>
+        {    
+          var _listofdata:Product[] = listofdata.value
+          _listofdata.push(...data)
+          listofdata.value = _listofdata
+        }
+    ),
+fetchBytemeOffers(value.value)
+
+    ]); // this is cool because it dosent care if one has an error or not it just runs whatever
+    console.log(results)  // for later if results.map ... result.status != "fulfilled" error handling
+
     }
     updatelist()
     
   }, [value.value]); // Re-fetch when `pretextvalue.value` changes
 
+    function createelele(prod:Product):JSX.Element {
+      return <>
+    <hr></hr>
+        <h1>{prod.providerName}</h1>
+        <h1>{prod.productId}</h1>
+        <h1>{prod.speed}</h1>
+        <h1>{prod.monthlyCostInCent}</h1>
+        <h1>{prod.monthlyCostInCentFrom25thMonth}</h1>
+        <h1>{prod.discountInCent}</h1>
+        <h1>{prod.contractDurationInMonths}</h1>
+        <h1>{prod.connectionType}</h1>
+        <br>  </br>
+        <hr></hr>
+      </>
+    }
+    const listofelements: JSX.Element[] = listofdata.value.map((prod: Product) => {
+      return createelele(prod)})
 
     return(
         <>
-     <h1>{value.value}</h1>
+     <h1>{value.value}
+
+      {listofelements}
+
+     </h1>
     </> 
   )    
 

@@ -2,8 +2,8 @@ import { Handlers } from "$fresh/server.ts";
 
 export const handler: Handlers = {
   async POST(req) {
-    const body = await req.json(); // contains address and apiKey
-    const { value, apiKey } = body;
+    const body = await req.json(); // contains addressess
+    const { value } = body;
     const [street, houseNumber, city, plz] = value;
 
     const soapBody = `
@@ -31,16 +31,17 @@ export const handler: Handlers = {
       method: "POST",
       headers: {
         "Content-Type": "text/xml",
-        "X-Api-Key": apiKey,
+        "X-Api-Key": "54846DFD9C29D20ACBF9975E770155A7CAA52C6BBC2728294FF961C8F1E9A2D633A8B91A0B04517C24CAB87999120A9558CD748335627DD982DA02D97038E0E0",
       },
       body: soapBody,
     });
 
     const xml = await response.text();
+    console.log(xml);
     return new Response(xml, {
       headers: {
         "Content-Type": "application/xml",
-        "Access-Control-Allow-Origin": "*", // optional for local dev
+        "Access-Control-Allow-Origin": "*", //  CORS policy. gave issuse
       },
     });
   },
