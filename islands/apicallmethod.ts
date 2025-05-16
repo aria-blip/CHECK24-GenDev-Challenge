@@ -25,6 +25,7 @@ export async function fetchWebWunderOffers(value: string[]):Promise<Product[]> {
           discountInCent: Number(get("ns2:discountInCent")) / 100,
           contractDurationInMonths: get("ns2:contractDurationInMonths"),
           connectionType: get("ns2:connectionType"),
+          additionalInfo:[]
         });
       }
       console.log(resultsinproducts)
@@ -34,14 +35,70 @@ export async function fetchWebWunderOffers(value: string[]):Promise<Product[]> {
     
 }
 
-export async function fetchBytemeOffers(value: string[]):Promise<Product[]> {
+// THIS METHOD WAS WRITTEN BY AI , I DID NOT WRITE THIS . --- for me try to learn "/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g" after deathline
+function parseCsvToProducts(csv: string): Product[] {
+  const lines = csv.trim().split("\n");
+
+  const products: Product[] = lines.map((line) => {
+    // Match CSV fields, including quoted fields with commas
+    const values = Array.from(
+      line.matchAll(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g),
+    ).map((match) =>
+      match[0].replace(/^"|"$/g, "") // remove surrounding quotes
+    );
+
+    const [
+      productId,
+      providerName,
+      speed,
+      monthlyCostInCent,
+      afterTwoYearsMonthlyCost,
+      durationInMonths,
+      connectionType,
+      installationService,
+      tv,
+      limitFrom,
+      maxAge,
+      voucherType,
+      voucherValue,
+    ] = values;
+
+    return {
+productId,
+providerName,
+speed,
+monthlyCostInCent: Number(monthlyCostInCent) / 100,
+monthlyCostInCentFrom25thMonth: Number(afterTwoYearsMonthlyCost) / 100,
+discountInCent: Number(voucherValue) / 100,
+contractDurationInMonths: durationInMonths,
+connectionType,
+additionalInfo: [
+  ["installationService", installationService],
+  ["tv", tv],
+  ["limitFrom", limitFrom],
+  ["maxAge", maxAge],
+  ["voucherType", voucherType],
+]
+
+
+    };
+  });
+
+  return products;
+}
+
+
+export async function fetchBytemeOffers(value: string[]):Promise<Product[]> {  // i had to make this a POST method so that i can use body to send date
     const res = await fetch("/api/byteme", {
-        method: "GET",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-      
+        body: JSON.stringify({ value: value}),
+
       });
 
-
+      const xmlText = await res.text();
+      var products:Product[] = parseCsvToProducts(xmlText)
+      console.log(products)   // to do list for tommorow : filter out duplicates ? => maybe use the id or safe all the ids in a list and check if the id is not on the list => change it in parseCsvToProducts()
       return await []
 
 

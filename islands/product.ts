@@ -7,6 +7,7 @@ export class Product {
     discountInCent: number = 0
     contractDurationInMonths: string = ""
     connectionType: string = ""
+    additionalInfo:string[][] = []
     constructor(
         productId: string ="" ,
         providerName: string="",

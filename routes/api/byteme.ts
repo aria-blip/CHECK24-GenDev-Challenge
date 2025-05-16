@@ -2,7 +2,7 @@ import { Handlers } from "$fresh/server.ts";
 
 
 export const handler: Handlers = {
-  async GET(req) {
+  async POST(req) {
     const body = await req.json(); // contains addressess
     const { value } = body;
     const [street, houseNumber, city, plz] = value;
@@ -24,10 +24,11 @@ const queryString = new URLSearchParams({
     });
 
     const xml = await response.text();
-    console.log(xml);
+    console.log("xml");
+    console.log("xml")
     return new Response(xml, {
       headers: {
-        "Content-Type": "application/csv",
+        "Content-Type": "text/csv",  // change to application/csv to text/xml 
         "Access-Control-Allow-Origin": "*", //  CORS policy. gave me isssuses befroe
       },
     });
