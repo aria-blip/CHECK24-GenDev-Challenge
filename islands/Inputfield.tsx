@@ -20,7 +20,7 @@ var   pretextvalue = useSignal([""])
 useEffect(() => {
       
   async function checkValidadress() {
-    if(pretextvalue.value.length == 4){
+    if(pretextvalue.value[3].length == 4){
       value.value = pretextvalue.value
     }
   }
