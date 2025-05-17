@@ -6,6 +6,7 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $api_byteme from "./routes/api/byteme.ts";
 import * as $api_joke from "./routes/api/joke.ts";
+import * as $api_pingperfect from "./routes/api/pingperfect.ts";
 import * as $api_webwunder from "./routes/api/webwunder.ts";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
@@ -22,6 +23,7 @@ const manifest = {
     "./routes/_app.tsx": $_app,
     "./routes/api/byteme.ts": $api_byteme,
     "./routes/api/joke.ts": $api_joke,
+    "./routes/api/pingperfect.ts": $api_pingperfect,
     "./routes/api/webwunder.ts": $api_webwunder,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,

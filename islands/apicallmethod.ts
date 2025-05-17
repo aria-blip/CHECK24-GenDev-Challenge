@@ -105,3 +105,20 @@ export async function fetchBytemeOffers(value: string[]):Promise<Product[]> {  /
 
 
 }
+
+
+export async function fetchPingPerfectOffers(value: string[]):Promise<Product[]> {  // i had to make this a POST method so that i can use body to send date
+    const res = await fetch("/api/pingperfect", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value: value}),
+
+      });
+
+      const xmlText = await res.text();
+      var products:Product[] = parseCsvToProducts(xmlText)
+      console.log(products)   // to do list for tommorow : filter out duplicates ? => maybe use the id or safe all the ids in a list and check if the id is not on the list => change it in parseCsvToProducts()
+      return await products
+
+
+}

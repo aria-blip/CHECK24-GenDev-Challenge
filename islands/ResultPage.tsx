@@ -1,6 +1,6 @@
 import { useEffect } from "preact/hooks";
 import { useSignal ,Signal} from "@preact/signals";
-import {fetchBytemeOffers,fetchWebWunderOffers} from "./apicallmethod.ts" // this is the function that will be used to fetch the data from the api
+import {fetchBytemeOffers,fetchWebWunderOffers,fetchPingPerfectOffers} from "./apicallmethod.ts" // this is the function that will be used to fetch the data from the api
 import { Product } from "./product.ts";
 import list from "npm:postcss@8.4.35/lib/list";
 import { JSX } from "preact/jsx-runtime";
@@ -19,7 +19,7 @@ export default  function ResultPage({value}:Props) {
   var   listofdata:Signal<Product[]> = useSignal([])
   var hasrun = useSignal(false)
   useEffect(() => {
-      
+    var pingperfectextra=[...value.value,false]
     async function updatelist() {
     if(hasrun.value == true){
     const results = await Promise.allSettled([
@@ -42,7 +42,8 @@ fetchBytemeOffers(value.value).then((data)=>
           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
           listofdata.value = _listofdata
         }
-    )
+    ),
+fetchPingPerfectOffers(value.value)
 
     ]); // this is cool because it dosent care if one has an error or not it just runs whatever
     console.log(results)  // for later if results.map ... result.status != "fulfilled" error handling
