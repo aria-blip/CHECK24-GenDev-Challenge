@@ -6,8 +6,14 @@ export const handler: Handlers = {
   async POST(req) {
     const body = await req.json();
 
-    const { street, houseNumber, city, plz } = body;
-    const wantsFiber=false // add a button to form ::: later to do
+    var { street, houseNumber, city, plz } = body;
+    const wantsFiber=false 
+    street="berliner str"
+    houseNumber="114"
+    city="berlin"
+    plz="xxxx"
+    
+    // add a button to form ::: later to do
     // onstruct the request body according to the OpenAPI schema
     const requestBody = {
       street,
@@ -18,7 +24,7 @@ export const handler: Handlers = {
 
     };
 
-    const timestamp = Math.floor(Date.now() );
+    const timestamp = Math.floor(Date.now() /1000);
     var stringrequestBody = JSON.stringify(requestBody);
 
     var finalstring=timestamp+":"+stringrequestBody  // does the reienfolge even matter? 
@@ -43,7 +49,9 @@ export const handler: Handlers = {
 const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(finalstring));
 
     console.log(encodeHex(signature))
-
+    console.log(finalstring)
+    console.log(timestamp)
+    
 
 
 
@@ -58,10 +66,13 @@ const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(finalstri
         "X-Signature": encodeHex(signature),
         "X-Timestamp":timestamp.toString(),
         "X-Client-Id":"5F0EB19A"
-      }
+      },
+      body:JSON.stringify(requestBody)
         });
 
-      console.log(response)
+      const resultt = await response.json();
+
+      console.log(resultt)
 
       return new Response()
 
