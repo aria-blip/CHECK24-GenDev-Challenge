@@ -1,8 +1,6 @@
 import { Handlers } from "$fresh/server.ts";
 import { decodeHex, encodeHex } from "jsr:@std/encoding/hex";
 
-const signatureSecret = "YOUR_SECRET_KEY_HERE";
-const clientId = "YOUR_CLIENT_ID_HERE";
 
 export const handler: Handlers = {
   async POST(req) {
@@ -20,7 +18,7 @@ export const handler: Handlers = {
 
     };
 
-    const timestamp = Math.floor(Date.now() / 1000);
+    const timestamp = Math.floor(Date.now() );
     var stringrequestBody = JSON.stringify(requestBody);
 
     var finalstring=timestamp+":"+stringrequestBody  // does the reienfolge even matter? 
@@ -42,7 +40,7 @@ export const handler: Handlers = {
     ["sign", "verify"], // Key usages: Sign and Verify
     );
 
-const signature = await crypto.subtle.sign("HMAC", key,new Uint8Array());
+const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(finalstring));
 
     console.log(encodeHex(signature))
 
@@ -56,12 +54,16 @@ const signature = await crypto.subtle.sign("HMAC", key,new Uint8Array());
     const response = await fetch("https://pingperfect.gendev7.check24.fun/internet/angebote/data", {
       method: "POST",
       headers: {
-        "Content-Type": "text/xml",
-        "X-Api-Key": "54846DFD9C29D20ACBF9975E770155A7CAA52C6BBC2728294FF961C8F1E9A2D633A8B91A0B04517C24CAB87999120A9558CD748335627DD982DA02D97038E0E0",
-      },
-      body: soapBody,
-    });
+"Content-Type": "application/json",
+        "X-Signature": encodeHex(signature),
+        "X-Timestamp":timestamp.toString(),
+        "X-Client-Id":"5F0EB19A"
+      }
+        });
 
+      console.log(response)
+
+      return new Response()
 
   }
 

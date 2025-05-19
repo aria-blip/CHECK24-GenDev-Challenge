@@ -23,7 +23,7 @@ export default  function ResultPage({value}:Props) {
     async function updatelist() {
     if(hasrun.value == true){
     const results = await Promise.allSettled([
-
+/*
      fetchWebWunderOffers(value.value ).then((data)=>
         {    
           var _listofdata:Product[] = listofdata.value
@@ -42,7 +42,8 @@ fetchBytemeOffers(value.value).then((data)=>
           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
           listofdata.value = _listofdata
         }
-    ),
+    ),  
+*/
 fetchPingPerfectOffers(value.value)
 
     ]); // this is cool because it dosent care if one has an error or not it just runs whatever

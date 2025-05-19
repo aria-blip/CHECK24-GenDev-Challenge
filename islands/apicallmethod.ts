@@ -116,9 +116,7 @@ export async function fetchPingPerfectOffers(value: string[]):Promise<Product[]>
       });
 
       const xmlText = await res.text();
-      var products:Product[] = parseCsvToProducts(xmlText)
-      console.log(products)   // to do list for tommorow : filter out duplicates ? => maybe use the id or safe all the ids in a list and check if the id is not on the list => change it in parseCsvToProducts()
-      return await products
-
+      
+      return await []
 
 }
