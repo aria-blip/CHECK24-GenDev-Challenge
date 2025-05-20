@@ -44,7 +44,16 @@ fetchBytemeOffers(value.value).then((data)=>
         }
     ),  
 */
-fetchPingPerfectOffers(value.value)
+fetchPingPerfectOffers(value.value).then((data)=>
+        {    
+          var _listofdata:Product[] = listofdata.value
+          _listofdata.push(...data)
+          _listofdata = removeDups<Product>(_listofdata)
+          _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
+
+          listofdata.value = _listofdata
+        }
+    )
 
     ]); // this is cool because it dosent care if one has an error or not it just runs whatever
     console.log(results)  // for later if results.map ... result.status != "fulfilled" error handling

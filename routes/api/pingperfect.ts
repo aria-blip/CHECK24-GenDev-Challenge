@@ -4,15 +4,17 @@ import { decodeHex, encodeHex } from "jsr:@std/encoding/hex";
 
 export const handler: Handlers = {
   async POST(req) {
-    const body = await req.json();
+   
 
-    var { street, houseNumber, city, plz } = body;
-    const wantsFiber=false 
-    street="berliner str"
-    houseNumber="114"
-    city="berlin"
-    plz="xxxx"
-    
+   
+    const body = await req.json();
+    const { value } = body;
+    var [street, houseNumber, city, plz,wantsfiber] = value;
+    console.log(wantsfiber)
+    console.log(street, houseNumber, city, plz);
+    const wantsFiber= wantsfiber == "true" ? true : false; // convert to boolean
+   
+    console.log(wantsFiber)
     // add a button to form ::: later to do
     // onstruct the request body according to the OpenAPI schema
     const requestBody = {
@@ -23,6 +25,13 @@ export const handler: Handlers = {
     wantsFiber
 
     };
+
+   
+    street="friedrichstraße"
+    houseNumber="114"
+    city="köln"
+    plz="51145"
+    
 
     const timestamp = Math.floor(Date.now() /1000);
     var stringrequestBody = JSON.stringify(requestBody);
@@ -72,10 +81,12 @@ const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(finalstri
 
       const resultt = await response.json();
 
-      console.log(resultt)
-
-      return new Response()
-
+    return new Response(JSON.stringify(resultt), {
+      headers: {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*", //  CORS policy. gave issuse
+      },
+    });
   }
 
 }

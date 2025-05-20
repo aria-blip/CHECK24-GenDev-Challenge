@@ -16,11 +16,13 @@ interface Props {
 
 export default  function Inputfield({value}:Props) {
 var   pretextvalue = useSignal([""])
-
+var wantsfuber = useSignal(false)
 useEffect(() => {
       
   async function checkValidadress() {
     if(pretextvalue.value[3].length == 4){
+      pretextvalue.value[4] = wantsfuber.value.toString()
+
       value.value = pretextvalue.value
     }
   }
@@ -55,6 +57,20 @@ return (
           const updated = [...pretextvalue.value];
           updated[3] = target.value;
           pretextvalue.value = updated;  } }  id="inputli" class="input-field" placeholder="Enter Plz" />
+<label>
+  <input
+    type="checkbox"
+    id="wantsFiberToggle"
+    onChange={
+      (event) => {
+        wantsfuber.value=wantsfuber.value == false ? true : false
+        pretextvalue.value[4] = wantsfuber.value.toString()
+      }}
+      
+  />
+  Wants Fiber?
+</label>
+
 
 </>
 

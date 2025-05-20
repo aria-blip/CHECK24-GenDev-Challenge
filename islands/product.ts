@@ -16,7 +16,8 @@ export class Product {
         monthlyCostInCentFrom25thMonth: number=0,
         discountInCent: number=0,
         contractDurationInMonths: string="",
-        connectionType: string=""
+        connectionType: string="",
+        additionalInfo:string[][] = []
     ) {
         this.productId = productId;
         this.providerName = providerName;
@@ -26,5 +27,6 @@ export class Product {
         this.discountInCent = discountInCent;
         this.contractDurationInMonths = contractDurationInMonths;
         this.connectionType = connectionType;
+        this.additionalInfo = additionalInfo;
     }
 }

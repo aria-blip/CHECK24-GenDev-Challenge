@@ -108,15 +108,38 @@ export async function fetchBytemeOffers(value: string[]):Promise<Product[]> {  /
 
 
 export async function fetchPingPerfectOffers(value: string[]):Promise<Product[]> {  // i had to make this a POST method so that i can use body to send date
-    const res = await fetch("/api/pingperfect", {
+    
+  const res = await fetch("/api/pingperfect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ value: value}),
 
       });
 
-      const xmlText = await res.text();
+      const jsonobj = await res.json();
+      var products:Product[] = []
+      for(var i of jsonobj){
+        products.push(
+          new Product( 
+            i.providerName,
+            i.providerName,
+            i.productInfo.speed.toString(),
+            i.pricingDetails.monthlyCostInCent,
+            i.pricingDetails.monthlyCostInCent,
+            0,
+            i.productInfo.contractDurationInMonths.toString(),
+            i.productInfo.connectionType,
+            [
+              ["installationService", i.pricingDetails.installationService],
+              ["tv", i.productInfo.tv],
+              ["limitFrom", i.productInfo.limitFrom],
+              ["maxAge", i.productInfo.maxAge],	
+            ]
+          )
+        )
+      }      
       
-      return await []
+
+      return await products;
 
 }
