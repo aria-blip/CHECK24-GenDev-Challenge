@@ -143,3 +143,20 @@ export async function fetchPingPerfectOffers(value: string[]):Promise<Product[]>
       return await products;
 
 }
+
+export async function fetchVerbynDichOffers(value: string[]):Promise<Product[]> { 
+  
+    const res = await fetch("/api/verbyndich", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value: value}),
+
+      });
+  
+    console.log(res)
+    var listofdata:Product[] =await res.json()
+
+    return listofdata; // this is a test to see if the data is coming in correctly
+}
+
+

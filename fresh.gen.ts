@@ -7,6 +7,7 @@ import * as $_app from "./routes/_app.tsx";
 import * as $api_byteme from "./routes/api/byteme.ts";
 import * as $api_joke from "./routes/api/joke.ts";
 import * as $api_pingperfect from "./routes/api/pingperfect.ts";
+import * as $api_verbyndich from "./routes/api/verbyndich.ts";
 import * as $api_webwunder from "./routes/api/webwunder.ts";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
@@ -15,6 +16,7 @@ import * as $Inputfield from "./islands/Inputfield.tsx";
 import * as $ResultPage from "./islands/ResultPage.tsx";
 import * as $apicallmethod from "./islands/apicallmethod.ts";
 import * as $product from "./islands/product.ts";
+import * as $state from "./islands/state.ts";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -24,6 +26,7 @@ const manifest = {
     "./routes/api/byteme.ts": $api_byteme,
     "./routes/api/joke.ts": $api_joke,
     "./routes/api/pingperfect.ts": $api_pingperfect,
+    "./routes/api/verbyndich.ts": $api_verbyndich,
     "./routes/api/webwunder.ts": $api_webwunder,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
@@ -34,6 +37,7 @@ const manifest = {
     "./islands/ResultPage.tsx": $ResultPage,
     "./islands/apicallmethod.ts": $apicallmethod,
     "./islands/product.ts": $product,
+    "./islands/state.ts": $state,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

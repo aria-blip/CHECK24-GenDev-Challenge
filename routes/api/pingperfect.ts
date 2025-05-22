@@ -27,10 +27,6 @@ export const handler: Handlers = {
     };
 
    
-    street="friedrichstraße"
-    houseNumber="114"
-    city="köln"
-    plz="51145"
     
 
     const timestamp = Math.floor(Date.now() /1000);
