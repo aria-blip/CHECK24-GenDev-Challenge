@@ -8,16 +8,16 @@ export const handler: Handlers = {
    
     const body = await req.json();
     const { value } = body;
-    var [street, houseNumber, city, plz,pagenum] = value;
-    console.log(street, houseNumber, city, plz)
+    var [street, houseNumber, city, plz,wired,pagenum] = value;
+    console.log(street, houseNumber, city, plz,pagenum);
     
     var productlis:Product[]=[]
 
     var pagecount=0
     var notlast=true
-    while(notlast){
+    //while(notlast){
                 
-              const response = await fetch("https://verbyndich.gendev7.check24.fun/check24/data?apiKey=1CDDEFDD3F763309CB8EC24E2BA2819EF302A67E827A401CC9D7ADAE4E618834&page="+pagecount.toString(), {
+              const response = await fetch("https://verbyndich.gendev7.check24.fun/check24/data?apiKey=1CDDEFDD3F763309CB8EC24E2BA2819EF302A67E827A401CC9D7ADAE4E618834&page="+pagenum.toString(), {
                 method: "POST",
                 headers: {
           "Content-Type": "text/plain" ,
@@ -90,8 +90,25 @@ export const handler: Handlers = {
 
 }
 
-    }
-    return new Response(JSON.stringify(productlis), {
+
+  //  }
+    return new Response(JSON.stringify({
+      
+    last:resultt.last,
+     product : new Product(
+                resultt.product,
+                resultt.product,
+                speed,
+                parseInt(monthlyPrice),
+                parseInt(finalMonthlyPrice),
+                parseInt(discount),
+                contractDuration,
+                "DSL",
+                [
+                  ["Data Cap", dataCap],
+                  ["Max Discount", maxDiscount],
+                ]
+              )}), {
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*", //  CORS policy. gave issuse 11 ist euro 

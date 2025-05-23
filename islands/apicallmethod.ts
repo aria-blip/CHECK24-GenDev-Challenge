@@ -143,8 +143,11 @@ export async function fetchPingPerfectOffers(value: string[]):Promise<Product[]>
       return await products;
 
 }
-
-export async function fetchVerbynDichOffers(value: string[]):Promise<Product[]> { 
+export interface VerbyndichResponse {
+  product:Product
+  lastPage:boolean
+}
+export async function fetchVerbynDichOffers(value: string[]):Promise<VerbyndichResponse> { 
   
     const res = await fetch("/api/verbyndich", {
         method: "POST",
@@ -154,9 +157,12 @@ export async function fetchVerbynDichOffers(value: string[]):Promise<Product[]> 
       });
   
     console.log(res)
-    var listofdata:Product[] =await res.json()
+    var result =await res.json()
 
-    return listofdata; // this is a test to see if the data is coming in correctly
+    return {
+      product:result.product ,
+      lastPage:result.last
+    }; // this is a test to see if the data is coming in correctly
 }
 
 
