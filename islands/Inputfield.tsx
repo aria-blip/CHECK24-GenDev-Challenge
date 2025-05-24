@@ -20,7 +20,7 @@ var wantsfuber = useSignal(false)
 useEffect(() => {
       
   async function checkValidadress() {
-    if(pretextvalue.value[3].length == 4){
+    if(pretextvalue.value[3].length == 5){
       pretextvalue.value[4] = wantsfuber.value.toString()
 
       value.value = pretextvalue.value

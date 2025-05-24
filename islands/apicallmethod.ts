@@ -166,3 +166,20 @@ export async function fetchVerbynDichOffers(value: string[]):Promise<VerbyndichR
 }
 
 
+export async function fetchServuSpeed(value: string[]):Promise<Product[]> {
+
+
+
+    const res = await fetch("/api/servusspeed", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value: value}),
+
+      });
+  
+    console.log(res)
+    var result =await res.json()
+    console.log(result)
+    return []
+
+}

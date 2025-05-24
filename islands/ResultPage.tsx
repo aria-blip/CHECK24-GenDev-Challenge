@@ -1,6 +1,6 @@
 import { useEffect } from "preact/hooks";
 import { useSignal ,Signal} from "@preact/signals";
-import {fetchBytemeOffers,fetchWebWunderOffers,fetchPingPerfectOffers,fetchVerbynDichOffers} from "./apicallmethod.ts" // this is the function that will be used to fetch the data from the api
+import {fetchBytemeOffers,fetchWebWunderOffers,fetchPingPerfectOffers,fetchVerbynDichOffers,fetchServuSpeed} from "./apicallmethod.ts" // this is the function that will be used to fetch the data from the api
 import { Product } from "./product.ts";
 import list from "npm:postcss@8.4.35/lib/list";
 import { JSX } from "preact/jsx-runtime";
@@ -144,6 +144,10 @@ fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data1 => {
         }
     )
 */
+
+fetchServuSpeed(value.value).then((data)=>
+{}  )
+
 
     ]); // this is cool because it dosent care if one has an error or not it just runs whatever
     console.log(results)  // for later if results.map ... result.status != "fulfilled" error handling
