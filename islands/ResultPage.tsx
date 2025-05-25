@@ -38,7 +38,7 @@ export default  function ResultPage({value}:Props) {
     async function updatelist() {
     if(hasrun.value == true){
     const results = await Promise.allSettled([
- // /*
+  /*
      fetchWebWunderOffers(value.value ).then((data)=>
         {    
           var _listofdata:Product[] = listofdata.value
@@ -49,6 +49,8 @@ export default  function ResultPage({value}:Props) {
           listofdata.value = _listofdata
         }
     ),
+*/
+
 fetchBytemeOffers(value.value).then((data)=>
         {    
           var _listofdata:Product[] = listofdata.value
@@ -58,7 +60,7 @@ fetchBytemeOffers(value.value).then((data)=>
           listofdata.value = _listofdata
         }
     ),  
-
+  /*
 fetchPingPerfectOffers(value.value).then((data)=>
         {    
           var _listofdata:Product[] = listofdata.value
@@ -143,7 +145,7 @@ fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data1 => {
           }
         }
     ),
-//   */
+
 
 fetchServuSpeed(value.value).then((data)=>
 {
@@ -155,7 +157,7 @@ fetchServuSpeed(value.value).then((data)=>
           listofdata.value = _listofdata
 
 }  )
-
+*/
 
     ]); // this is cool because it dosent care if one has an error or not it just runs whatever
     console.log(results)  // for later if results.map ... result.status != "fulfilled" error handling
@@ -167,33 +169,95 @@ fetchServuSpeed(value.value).then((data)=>
     
   }, [value.value]); // fetch when pretextvalue.value changes
 
-    function createelele(prod:Product):JSX.Element {
-      return <>
-    <hr></hr>
-        <h1>{prod.providerName}</h1>
-        <h1>{prod.productId}</h1>
-        <h1>{prod.speed}</h1>
-        <h1>{prod.monthlyCostInCent}</h1>
-        <h1>{prod.monthlyCostInCentFrom25thMonth}</h1>
-        <h1>{prod.discountInCent}</h1>
-        <h1>{prod.contractDurationInMonths}</h1>
-        <h1>{prod.connectionType}</h1>
-        <br>  </br>
-        <hr></hr>
+  function createAdditionalElements(additonalist:string[][]):JSX.Element[]{
+    var jsxElements: JSX.Element[] = [];
+    for (const [key, value] of additonalist) {
+
+for (const [key, value] of additonalist) {
+  jsxElements.push(
+<>
+       <div key={key} className="additional-item">
+          <span className="additional-label">{key}:</span>
+          <span className="additional-value">{value}</span>
+        </div>
+</>
+
+  )
+}}
+    return jsxElements
+  }
+
+    function createelele(prod:Product,index:number):JSX.Element {
+
+      return<>
+
+   <div key={`${prod.productId}-${index}`}  className="product-card">
+        <div className="card-header">
+          <div className="provider-name">{prod.providerName}</div>
+          <div className="product-id">ID: {prod.productId}</div>
+        </div>
+        
+        <div className="card-content">
+          <div className="info-item">
+            <span className="info-label">Speed:</span>
+            <span className="info-value">{prod.speed}</span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">Monthly:</span>
+            <span className="info-value">{prod.monthlyCostInCent}</span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">25th Month:</span>
+            <span className="info-value">{prod.monthlyCostInCentFrom25thMonth}</span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">Discount:</span>
+            <span className="info-value">{prod.discountInCent}</span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">Duration:</span>
+            <span className="info-value">{prod.contractDurationInMonths}</span>
+          </div>
+          <div className="info-item">
+            <span className="info-label">Type:</span>
+            <span className="info-value">{prod.connectionType}</span>
+          </div>
+        </div>
+        
+        <div className="additional-info">
+          {createAdditionalElements(prod.additionalInfo)}
+          <div className="additional-item">
+            <span className="additional-label">Color:</span>
+            <span className="additional-value">Red<span className="color-indicator"></span></span>
+          </div>
+        </div>
+      </div>
+
+
+
+
+
       </>
     }
     console.log(listofdata.value.length)
-    const listofelements: JSX.Element[] = listofdata.value.slice(1).map((prod: Product) => {  // for some reason the first element was always null this is temporerel solution
-      return createelele(prod)})
+    const listofelements: JSX.Element[] = listofdata.value.slice(1).map((prod: Product ,index: number) => {  // for some reason the first element was always null this is temporerel solution
+      return createelele(prod,index)})
 
     return(
         <>
-     <h1>{value.value}
 
+
+
+ <div className="products-container">
+    <div className="products-grid">
       {listofelements}
+    </div>
+    
+    
+  </div>
 
-     </h1>
+     
     </> 
   )    
 
-}
+  }

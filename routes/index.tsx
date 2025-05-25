@@ -22,6 +22,8 @@ export default function Home() {
         </p>
 
         <Inputfield value={theoriginalvalue} />
+
+        
         <ResultPage value={theoriginalvalue} />
       </div>
     </div>

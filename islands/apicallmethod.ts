@@ -65,14 +65,14 @@ function parseCsvToProducts(csv: string): Product[] {
     // Skip duplicates
     if (seenProductIds.has(productId)) continue;
     seenProductIds.add(productId);
-
+    console.log("productId", line, productId, providerName, speed, monthlyCostInCent, afterTwoYearsMonthlyCost, durationInMonths, connectionType, installationService, tv, limitFrom, maxAge, voucherType, voucherValue)
     products.push({
       productId,
       providerName,
       speed,
       monthlyCostInCent: Number(monthlyCostInCent) / 100,
       monthlyCostInCentFrom25thMonth: Number(afterTwoYearsMonthlyCost) / 100,
-      discountInCent: Number(voucherValue) / 100,
+      discountInCent: Number(line.slice(-5)) / 100,
       contractDurationInMonths: (durationInMonths),
       connectionType,
       additionalInfo: [
