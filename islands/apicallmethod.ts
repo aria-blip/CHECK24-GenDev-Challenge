@@ -162,7 +162,7 @@ export async function fetchVerbynDichOffers(value: string[]):Promise<VerbyndichR
     return {
       product:result.product ,
       lastPage:result.last
-    }; // this is a test to see if the data is coming in correctly
+    }; // this is a test to see if the data is coming in correctly it we are also passng is lastPage to the client so that it knows if it should stop or send another request 
 }
 
 
@@ -177,9 +177,8 @@ export async function fetchServuSpeed(value: string[]):Promise<Product[]> {
 
       });
   
-    console.log(res)
     var result =await res.json()
-    console.log(result)
-    return []
+    console.log("resul is" +result.list)
+    return result.list
 
 }

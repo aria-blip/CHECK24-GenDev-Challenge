@@ -37,7 +37,7 @@ const password = "8639751FE266";
                 for (const i of data.availableProducts) {
           console.log("i",i)
 
-      const response = await fetch("https://servus-speed.gendev7.check24.fun/api/external/product-details/"+i, {
+      const responsee = await fetch("https://servus-speed.gendev7.check24.fun/api/external/product-details/"+i, {
         method: "POST",
         headers: {
                 "Authorization": authHeader,
@@ -45,9 +45,10 @@ const password = "8639751FE266";
         },
         body: JSON.stringify(address),
           });
-          console.log("response",await response.json())
           
-const productDetails = await response.json();
+const product = await responsee.json();
+const productDetails = product.servusSpeedProduct;
+console.log("productDetails",productDetails)
 listofproducts.push(
   new Product(
     productDetails.providerName,
@@ -68,11 +69,10 @@ listofproducts.push(
   )
 );
 
-        })
-
+      }})
     console.log("response",resultt)
 
-    return new Response("ok", {
+    return new Response(JSON.stringify({ list:  listofproducts}), {
       headers: {}})
 }
 

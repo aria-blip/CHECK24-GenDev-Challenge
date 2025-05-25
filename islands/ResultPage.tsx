@@ -38,7 +38,7 @@ export default  function ResultPage({value}:Props) {
     async function updatelist() {
     if(hasrun.value == true){
     const results = await Promise.allSettled([
-/*
+ // /*
      fetchWebWunderOffers(value.value ).then((data)=>
         {    
           var _listofdata:Product[] = listofdata.value
@@ -68,7 +68,7 @@ fetchPingPerfectOffers(value.value).then((data)=>
 
           listofdata.value = _listofdata
         }
-    )
+    ),
 fetchVerbynDichOffers( [...value.value,pagenum.toString()] ).then((data)=>
         {    
           if(data.lastPage == false){
@@ -142,11 +142,19 @@ fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data1 => {
                                                       
           }
         }
-    )
-*/
+    ),
+//   */
 
 fetchServuSpeed(value.value).then((data)=>
-{}  )
+{
+          var _listofdata:Product[] = listofdata.value
+          _listofdata.push(...data)
+          _listofdata = removeDups<Product>(_listofdata)
+          _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
+
+          listofdata.value = _listofdata
+
+}  )
 
 
     ]); // this is cool because it dosent care if one has an error or not it just runs whatever

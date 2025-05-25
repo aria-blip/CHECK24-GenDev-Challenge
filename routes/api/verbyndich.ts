@@ -27,6 +27,21 @@ export const handler: Handlers = {
                   });
 
 
+            if (!response.ok) {
+              const text = await response.text();
+              console.error("Error response:", response.status, text);
+              return new Response(JSON.stringify(
+
+                {
+                  last:false,
+                  product: new Product()
+                }
+              ), {
+                status: 500,
+                headers: { "Content-Type": "application/json" },
+              });
+            }
+
                 const resultt = await response.json();
               var description=resultt.description.split(" ")
 
