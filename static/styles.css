@@ -2,7 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-
+.container-fluid {
+    max-width: 200% !important;
+    width: 1000px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
 .products-container {
     max-width: 300% !important;
     width:1700px !important;
@@ -156,3 +161,4 @@
         min-height: 280px;
     }
 }
+

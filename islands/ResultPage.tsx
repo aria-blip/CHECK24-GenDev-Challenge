@@ -31,7 +31,21 @@ interface Props {
   }
 
 export default  function ResultPage({value}:Props) {
+
+  // here i define the signals these will be used to store and update data if there is user interaction
   var hasrun = useSignal(false)
+  var filterSignal=useSignal({
+    speed: 0,
+    wiredOnly: false,
+    minMonthlyPrice: 0,
+    minDuration: 0
+  });
+
+  var sortSignal = useSignal({
+    sortBy: "",
+    sortDirection: "asc" // or "desc"
+  });
+
 
   useEffect(() => {
     var pingperfectextra=[...value.value,false]
@@ -173,18 +187,18 @@ fetchServuSpeed(value.value).then((data)=>
     var jsxElements: JSX.Element[] = [];
     for (const [key, value] of additonalist) {
 
-for (const [key, value] of additonalist) {
-  jsxElements.push(
-<>
-       <div key={key} className="additional-item">
-          <span className="additional-label">{key}:</span>
-          <span className="additional-value">{value}</span>
-        </div>
-</>
+        for (const [key, value] of additonalist) {
+          jsxElements.push(
+        <>
+              <div key={key} className="additional-item" style={ { marginRight: '5px' }}>
+                  <span  className="additional-label">{key}:</span>
+                  <span className="additional-value">{value}</span>
+                </div>
+        </>
 
-  )
-}}
-    return jsxElements
+          )
+        }}
+     return jsxElements
   }
 
     function createelele(prod:Product,index:number):JSX.Element {
@@ -225,10 +239,10 @@ for (const [key, value] of additonalist) {
         </div>
         
         <div className="additional-info">
-          {createAdditionalElements(prod.additionalInfo)}
+          
           <div className="additional-item">
-            <span className="additional-label">Color:</span>
-            <span className="additional-value">Red<span className="color-indicator"></span></span>
+          {createAdditionalElements(prod.additionalInfo)}
+
           </div>
         </div>
       </div>
@@ -240,13 +254,197 @@ for (const [key, value] of additonalist) {
       </>
     }
     console.log(listofdata.value.length)
-    const listofelements: JSX.Element[] = listofdata.value.slice(1).map((prod: Product ,index: number) => {  // for some reason the first element was always null this is temporerel solution
-      return createelele(prod,index)})
+    var filteredlist :Product[] = [];
+    // filtering logic 
+    if(filterSignal.value.wiredOnly){
 
+      filteredlist=  listofdata.value.filter(el => Number(el.speed) > filterSignal.value.speed && el.connectionType == "Fiber" && el.monthlyCostInCent >= filterSignal.value.minMonthlyPrice  && Number(el.contractDurationInMonths) >= filterSignal.value.minDuration );
+
+    }else{
+       filteredlist=  listofdata.value.filter(el => Number(el.speed) > filterSignal.value.speed  && el.monthlyCostInCent >= filterSignal.value.minMonthlyPrice  && Number(el.contractDurationInMonths) >= filterSignal.value.minDuration );
+
+    }
+    if(sortSignal.value.sortBy != ""){
+        filteredlist.sort((a, b) => {
+          if (sortSignal.value.sortDirection === "asc") {
+            return Number(a[sortSignal.value.sortBy as keyof Product]) - Number(b[sortSignal.value.sortBy as keyof Product]) 
+          }else{
+            return Number(b[sortSignal.value.sortBy as keyof Product]) - Number(a[sortSignal.value.sortBy as keyof Product]) 
+
+          }
+        })
+
+    }
+
+
+    const listofelements: JSX.Element[] = filteredlist.slice(1).map((prod: Product ,index: number) => {  // for some reason the first element was always null this is temporerel solution
+      return createelele(prod,index)})
+ 
     return(
         <>
+    <div class="container-fluid py-4">
+        <div class="row g-3 align-items-center bg-white rounded shadow-sm p-4 mb-4">
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label text-muted fw-semibold small mb-2">
+                    <i class="fas fa-tachometer-alt text-primary me-1"></i>
+                    Min Speed (Mbps)
+                </label>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-primary text-white border-0">
+                        <i class="fas fa-rocket"></i>
+                    </span>
+                    <input 
+                        type="number" 
+                        class="form-control border-0 shadow-sm" 
+                        placeholder="Speed"
+                        min="0"
+                        onInput={(event) => {
+                            const target = event.target as HTMLInputElement;
+                            filterSignal.value ={
+                                ...filterSignal.value,
+                                speed: parseInt(target.value) || 0
+                            }
+                            
+                        }}
+                    ></input>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label text-muted fw-semibold small mb-2">
+                    <i class="fas fa-ethernet text-success me-1"></i>
+                    Wired Only
+                </label>
+                <div class="form-check form-switch d-flex justify-content-center">
+                    <input 
+                        class="form-check-input" 
+                        type="checkbox" 
+                        id="wiredSwitch"
+                        onInput={(event) => {
+                            const target = event.target as HTMLInputElement;
+                            filterSignal.value = {
+                                ...filterSignal.value,
+                                wiredOnly: target.checked
+                            }
+                        }}
+                    ></input>
+                    <label class="form-check-label text-muted small ms-2" for="wiredSwitch">
+                        Required
+                    </label>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label text-muted fw-semibold small mb-2">
+                    <i class="fas fa-dollar-sign text-warning me-1"></i>
+                    Min Monthly Price
+                </label>
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-warning text-dark border-0">
+                        $
+                    </span>
+                    <input 
+                        type="number" 
+                        class="form-control border-0 shadow-sm" 
+                        placeholder="0.00"
+                        min="0"
+                        step="0.01"
+                        onInput={(event) => {
+                            const target = event.target as HTMLInputElement;
+                            filterSignal.value = {
+                                ...filterSignal.value,
+                                minMonthlyPrice: parseFloat(target.value) || 0
+                            }
+                        }}
+                    ></input>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+                <label class="form-label text-muted fw-semibold small mb-2">
+                    <i class="fas fa-clock text-info me-1"></i>
+                    Min Duration
+                </label>
+                <input 
+                    type="number" 
+                    class="form-control form-control-sm border-0 shadow-sm" 
+                    placeholder="Months"
+                    min="1"
+                    onInput={(event) => {
+                        const target = event.target as HTMLInputElement;
+                        filterSignal.value = {
+                            ...filterSignal.value,
+                            minDuration: parseInt(target.value) || 0}
+                    }}
+                ></input>
+
+                
+            </div>
+
+          
+          {//    the sorting inputs are here  }
+}
+          <div class="col-lg-2 col-md-6">
+                <label class="form-label text-muted fw-semibold small mb-2">
+                    <i class="fas fa-sort text-secondary me-1"></i>
+                    Sort By
+                </label>
+                <select 
+                    class="form-select form-select-sm bg-secondary text-white border-0 rounded-1"
+                    onInput={(event) => {
+
+                        const target = event.target as HTMLSelectElement;
+                        sortSignal.value ={ ...sortSignal.value,
+                            sortBy: target.value  }
+                        ;}}
+                >
+                    <option value="">Choose...</option>
+                    <option value="speed">Speed</option>
+                    <option value="monthlyCostInCent">Monthly Price</option>
+                    <option value="discountInCent">Discount</option>
+                </select>
+
+                                <label class="form-label text-muted fw-semibold small mb-2">
+                    <i class="fas fa-arrows-alt-v text-secondary me-1"></i>
+                    Order
+                </label>
+                <div class="bg-secondary rounded-1 p-2 d-flex align-items-center justify-content-between">
+                    <span class="small text-white fw-semibold">Asc</span>
+                    <div class="form-check form-switch mb-0">
+                        <input 
+                            class="form-check-input " 
+                            type="checkbox" 
+                            id="sortDirection"
+                            onInput={(event) => {
+                            const target = event.target as HTMLInputElement;
+                            sortSignal.value = {...sortSignal.value,
+                                sortDirection: target.checked ? "desc" : "asc"
+                            }}}
+                        ></input>
+                    </div>
+                    <span class="small text-white fw-semibold">Desc</span>
+                </div>
+            </div>
+
+            <div class="col-lg-2 col-md-6">
+
+            </div>
 
 
+
+
+
+
+
+
+
+
+        </div>
+   
+</div>
+{filterSignal.value.speed } 
+{filterSignal.value.wiredOnly ? "Wired Only" : "DSL"}
+{filterSignal.value.minMonthlyPrice > 0 ? `Min Monthly Price: $${filterSignal.value.minMonthlyPrice}` : "No Min Monthly Price"}
 
  <div className="products-container">
     <div className="products-grid">
