@@ -15,50 +15,92 @@ interface Props {
 }
 
 export default  function Inputfield({value}:Props) {
-var   pretextvalue = useSignal([""])
+var   pretextvalue = useSignal(["","","",""])
 var wantsfuber = useSignal(false)
+var clicked = useSignal(false)
+
+
 useEffect(() => {
       
   async function checkValidadress() {
-    if(pretextvalue.value[3].length == 5){
+    console.log(pretextvalue.value.length)
+    if(pretextvalue.value[0] != "" && pretextvalue.value[1] != "" && pretextvalue.value[2] != "" && pretextvalue.value[3] != ""){
+  
+    if(pretextvalue.value[3].length == 5 && pretextvalue.value[1].length <= 3){
       pretextvalue.value[4] = wantsfuber.value.toString()
-
+      console.log("pretextvalue.value", pretextvalue.value)
       value.value = pretextvalue.value
-    }
+    }else{
+      alert("Please enter a valid address with a 5-digit postal code and a house number of up to 3 digits.");
+    } 
+   }
   }
   checkValidadress()
   
-}, [pretextvalue.value]); // Re-fetch when `pretextvalue.value` changes
+}, [clicked.value]); // Re-fetch when `pretextvalue.value` changes
 
 
 return (
 <>
 
-<input type="text"  onInput={(event:InputEvent
-        )=> {const target = event.target as HTMLInputElement;
-          const updated = [...pretextvalue.value];
-          updated[0] = target.value;
-          pretextvalue.value = updated;  } }  id="inputli" class="input-field" placeholder="Enter Street" />
-<input type="text"  onInput={(event:InputEvent
-        )=> {
-          const target = event.target as HTMLInputElement;
-          const updated = [...pretextvalue.value];
-          updated[1] = target.value;
-          pretextvalue.value = updated;
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="input-group shadow-sm" style="border-radius: 0.5rem; overflow: hidden;">
+                    <input type="text" onInput={(event:InputEvent) => {
+                        const target = event.target as HTMLInputElement;
+                        const cleanedValues = target.value.replace(/[^a-zA-ZäöüÄÖÜß\s]/g, '');
+                        const updated = [...pretextvalue.value];
+                        updated[0] = cleanedValues;
+                        pretextvalue.value = updated; 
+                        target.value = cleanedValues;
+                    }} id="inputli" class="form-control border-end-0" placeholder="Berliner str" style="border-radius: 0.5rem 0 0 0.5rem; border-right: none; box-shadow: none;" />
+                    
+                    <input type="text" onInput={(event:InputEvent) => {
+                        const target = event.target as HTMLInputElement;
+                        const cleanedValues = target.value.replace(/[^0-9]/g, '');
+                        const updated = [...pretextvalue.value];
+                        updated[1] = cleanedValues;
+                        pretextvalue.value = updated;
+                        target.value = cleanedValues;
+                    }} id="inputli" class="form-control border-start-0 border-end-0" placeholder="123" style="border-left: none; border-right: none; box-shadow: none;" />
+                    
+                    <input type="text" onInput={(event:InputEvent) => {         
+                        const target = event.target as HTMLInputElement;
+                        const cleanedValues = target.value.replace(/[^a-zA-ZäöüÄÖÜß\s]/g, '');
+                        const updated = [...pretextvalue.value];
+                        updated[2] = cleanedValues;
+                        pretextvalue.value = updated; 
+                        target.value = cleanedValues;
+                    }} id="inputli" class="form-control border-start-0 border-end-0" placeholder="Berlin" style="border-left: none; border-right: none; box-shadow: none;" />
+                    
+                    <input type="text" onInput={(event:InputEvent) => {            
+                        const target = event.target as HTMLInputElement;
+                        const cleanedValues = target.value.replace(/[^0-9]/g, '');
+                        const updated = [...pretextvalue.value];
+                        updated[3] = cleanedValues;
+                        pretextvalue.value = updated; 
+                        target.value = cleanedValues;
+                    }} id="inputli" class="form-control border-start-0" placeholder="51103" style=" border-left: none;border-right:none; box-shadow: none;" />
+                                   
+                                   
+                       <button class="btn btn-primary border-start-0" type="button"  onClick={(event) => {         
+                        const target = event.target as HTMLInputElement;
+                        clicked.value=clicked.value == false ? true : false
+                        console.log("clicked", clicked.value)
+                    }}  style="border-left: none; border-radius: 0;">Search</button>
 
-        } }  id="inputli" class="input-field" placeholder="Enter Housenumber" />
-<input type="text"  onInput={(event:InputEvent
-        )=> {          const target = event.target as HTMLInputElement;
-          const updated = [...pretextvalue.value];
-          updated[2] = target.value;
-          pretextvalue.value = updated;  } }  id="inputli" class="input-field" placeholder="Enter City" />
-<input type="text"  onInput={(event:InputEvent
-        )=> {          const target = event.target as HTMLInputElement;
-          const updated = [...pretextvalue.value];
-          updated[3] = target.value;
-          pretextvalue.value = updated;  } }  id="inputli" class="input-field" placeholder="Enter Plz" />
-<label>
-  <input
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+                    
+
+  
+  {/* <input
     type="checkbox"
     id="wantsFiberToggle"
     onChange={
@@ -67,9 +109,8 @@ return (
         pretextvalue.value[4] = wantsfuber.value.toString()
       }}
       
-  />
+  /> */}
   Wants Fiber?
-</label>
 
 
 </>

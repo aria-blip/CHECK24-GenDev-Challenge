@@ -1,6 +1,7 @@
 import { Handlers } from "$fresh/server.ts";
 import { decodeHex, encodeHex } from "jsr:@std/encoding/hex";
 import { Product } from "../../islands/product.ts";
+import { CHAR_0 } from "$std/path/_common/constants.ts";
 export const handler: Handlers = {
   async POST(req) {
    
@@ -9,7 +10,6 @@ export const handler: Handlers = {
     const body = await req.json();
     const { value } = body;
     var [street, houseNumber, city, plz,wired,pagenum] = value;
-    console.log(street, houseNumber, city, plz,pagenum);
     
     var productlis:Product[]=[]
 
@@ -41,11 +41,11 @@ export const handler: Handlers = {
                 headers: { "Content-Type": "application/json" },
               });
             }
-
+            
                 const resultt = await response.json();
-              var description=resultt.description.split(" ")
 
           // price
+            console.log("resultt:   ",resultt.description)
           const priceStart = resultt.description.indexOf("Für nur ") + "Für nur ".length;
           const priceEnd = resultt.description.indexOf("€ im Monat", priceStart);
           const monthlyPrice =  resultt.description.substring(priceStart, priceEnd).trim() ;
@@ -62,11 +62,22 @@ export const handler: Handlers = {
           const capStart = resultt.description.indexOf("Ab ") + "Ab ".length;
           const capEnd = resultt.description.indexOf("GB pro Monat", capStart);
           const dataCap = resultt.description.substring(capStart, capEnd).trim();
+          
 
+          var discount:any
+          var seconddiscount:any=null
+          if(resultt.description.includes("%")){ // the api can give it in percentage or in euro
           const discountStart = resultt.description.indexOf("einen Rabatt von ") + "einen Rabatt von ".length;
           const discountEnd = resultt.description.indexOf("%", discountStart);
-          const discount = resultt.description.substring(discountStart, discountEnd).trim();
+           discount = resultt.description.substring(discountStart, discountEnd).trim();
+          }else{
+          var seconddiscount:any=null
+const discountMatch = resultt.description.match(/Rabatt von\s+(\d+)\s*€/i);
+        seconddiscount = discountMatch ? parseInt(discountMatch[1], 10) : null;
 
+
+          }
+ 
           const maxDiscountStart = resultt.description.indexOf("Der maximale Rabatt beträgt ") + "Der maximale Rabatt beträgt ".length;
           const maxDiscountEnd = resultt.description.indexOf("€", maxDiscountStart);
           const maxDiscount = resultt.description.substring(maxDiscountStart, maxDiscountEnd).trim();
@@ -75,38 +86,53 @@ export const handler: Handlers = {
           const finalPriceEnd = resultt.description.indexOf("€", finalPriceStart);
           const finalMonthlyPrice = resultt.description.substring(finalPriceStart, finalPriceEnd).trim();
 
-              
-              if(resultt.valid==true){
-     
-          productlis.push(new Product(
-                resultt.product,
-                resultt.product,
-                speed,
-                parseInt(monthlyPrice),
-                parseInt(finalMonthlyPrice),
-                parseInt(discount),
-                contractDuration,
-                "DSL",
-                [
-                  ["Data Cap", dataCap],
-                  ["Max Discount", maxDiscount],
-                ]
-              ))
+          const orderMinimumMatch = resultt.description.match(/Mindestbestellwert beträgt\s+(\d+)\s*€/i);
+          const orderMinimum = orderMinimumMatch ? parseInt(orderMinimumMatch[1], 10) : null;
 
-              console.log("mon" + monthlyPrice)
-              if(resultt.last==true){
-                console.log("last")
-                notlast=false
-              }
-              if(pagecount>100){  // to prevent infinite loop
-                notlast=false
-              }
-              pagecount++
+          console.log("Mindestbestellwert:", orderMinimum);
 
-}
+          console.log("maxDiscount: ", maxDiscount)
+          console.log("finalMonthlyPrice: ", finalMonthlyPrice)
 
+          console.log("_______________________________________")
+
+          var Connectiontype =""
+          if(resultt.description.includes("DSL")){
+            Connectiontype = "DSL"
+          }else if(resultt.description.includes("Fiber")){
+              Connectiontype = "Fiber"
+          }else if(resultt.description.includes("Cable")){
+            Connectiontype = "Cable"
+            
+          }else{
+            Connectiontype = "Unknown"}
 
   //  }
+  
+    const tvChannelMatch = resultt.description.match(/enthalten\s+([\w+]+)/);
+    const tvChannel = tvChannelMatch ? tvChannelMatch[1] : null;
+
+    const ageLimitMatch = resultt.description.match(/unter\s+(\d+)\s+Jahren/);
+    const ageLimit = ageLimitMatch ? parseInt(ageLimitMatch[1], 10) : null;
+
+    var additionalInfolist:string[][] = []
+
+    if( tvChannel!== null){
+      additionalInfolist.push(["TV Channel", tvChannel]);
+    } 
+    if(ageLimit !== null){
+      additionalInfolist.push(["Age Limit", ageLimit.toString()]);
+    }
+    if(dataCap.length <  5 && dataCap !=("Di") ){
+      additionalInfolist.push(["Data Cap", dataCap]);
+    }
+    if(maxDiscount.length < 5){
+      additionalInfolist.push(["Max Discount", maxDiscount]);
+    }
+    if(orderMinimum !== null){
+      additionalInfolist.push(["Order Minimum", orderMinimum.toString()+"€"]);
+    }
+
     return new Response(JSON.stringify({
       
     last:resultt.last,
@@ -116,13 +142,12 @@ export const handler: Handlers = {
                 speed,
                 parseInt(monthlyPrice),
                 parseInt(finalMonthlyPrice),
-                parseInt(discount),
+              seconddiscount == null ? (parseInt(discount) / 100) * parseInt(monthlyPrice) : seconddiscount*10,
                 contractDuration,
-                "DSL",
-                [
-                  ["Data Cap", dataCap],
-                  ["Max Discount", maxDiscount],
-                ]
+                Connectiontype,
+                
+                additionalInfolist
+                
               )}), {
       headers: {
         "Content-Type": "application/json",

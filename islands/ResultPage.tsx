@@ -14,6 +14,8 @@ function removeDups<T>(array: T[]): T[] {
     return [...new Set(array)];
 }
 function verbynddichtemplate(data:VerbyndichResponse){
+          console.log("idnv "+ data.lastPage)
+
           if(data.lastPage == false){
                       var _listofdata:Product[] = listofdata.value
           _listofdata.push(data.product)
@@ -23,7 +25,9 @@ function verbynddichtemplate(data:VerbyndichResponse){
           listofdata.value = _listofdata
           }
 }
-
+function shareButtonClicked(){
+  alert("clicked")
+}
 
 interface Props {
 
@@ -33,7 +37,16 @@ interface Props {
 export default  function ResultPage({value}:Props) {
 
   // here i define the signals these will be used to store and update data if there is user interaction
-  var hasrun = useSignal(false)
+  var sharebuttonelement=<> <> <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: #003366; border-color: #003366;" onClick={(event)=>{shareButtonClicked()}}>
+                            <img src="/linkshareicon.png"></img>
+</button></>   </>
+  var showsharebutton = useSignal( <></> ) // at first the button is invisivle then when the user clicks on search the button will become visible TODO:check if atleast one of the api has returned then activate teh share button
+
+  if(listofdata.value.length>=5){
+    showsharebutton.value=sharebuttonelement
+  }
+
+
   var filterSignal=useSignal({
     speed: 0,
     wiredOnly: false,
@@ -41,125 +54,139 @@ export default  function ResultPage({value}:Props) {
     minDuration: 0
   });
 
+
+
+
   var sortSignal = useSignal({
     sortBy: "",
     sortDirection: "asc" // or "desc"
   });
 
-
   useEffect(() => {
-    var pingperfectextra=[...value.value,false]
+    // resetting the list this will be refreshed whenever the user clickes on the search button in Inputfield.tsx
+    listofdata.value = []
+     pagenum = 0
     async function updatelist() {
-    if(hasrun.value == true){
+
+  //  if(hasrun.value == true){
     const results = await Promise.allSettled([
-  /*
-     fetchWebWunderOffers(value.value ).then((data)=>
-        {    
-          var _listofdata:Product[] = listofdata.value
-          _listofdata.push(...data)
-          _listofdata = removeDups<Product>(_listofdata)
-          _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
 
-          listofdata.value = _listofdata
-        }
-    ),
-*/
-
-fetchBytemeOffers(value.value).then((data)=>
-        {    
-          var _listofdata:Product[] = listofdata.value
-          _listofdata.push(...data)
-          _listofdata = removeDups<Product>(_listofdata)
-          _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
-          listofdata.value = _listofdata
-        }
-    ),  
-  /*
-fetchPingPerfectOffers(value.value).then((data)=>
-        {    
-          var _listofdata:Product[] = listofdata.value
-          _listofdata.push(...data)
-          _listofdata = removeDups<Product>(_listofdata)
-          _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
-
-          listofdata.value = _listofdata
-        }
-    ),
-fetchVerbynDichOffers( [...value.value,pagenum.toString()] ).then((data)=>
-        {    
-          if(data.lastPage == false){
-          var _listofdata:Product[] = listofdata.value
-          _listofdata.push(data.product)
-          _listofdata = removeDups<Product>(_listofdata)
-          _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
-          pagenum++
-          listofdata.value = _listofdata
-// i know this is not the WAY but i dont think it mattess on speed the problem is i dont know what the max number i tesed and they seem to be 10-15 so i set it to 20 it dosent matter if it stops at 10 because if it returns false all the others wont be called there is problaly some smarter way of doing it but this is MY way (: 
-fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data1 => {
-  verbynddichtemplate(data1);
-  fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data2 => {
-    verbynddichtemplate(data2);
-    fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data3 => {
-      verbynddichtemplate(data3);
-      fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data4 => {
-        verbynddichtemplate(data4);
-        fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data5 => {
-          verbynddichtemplate(data5);
-          fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data6 => {
-            verbynddichtemplate(data6);
-            fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data7 => {
-              verbynddichtemplate(data7);
-              fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data8 => {
-                verbynddichtemplate(data8);
-                fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data9 => {
-                  verbynddichtemplate(data9);
-                  fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data10 => {
-                    verbynddichtemplate(data10);
-                    fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data11 => {
-                      verbynddichtemplate(data11);
-                      fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data12 => {
-                        verbynddichtemplate(data12);
-                        fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data13 => {
-                          verbynddichtemplate(data13);
-                          fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data14 => {
-                            verbynddichtemplate(data14);
-                            fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data15 => {
-                              verbynddichtemplate(data15);
-                              fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data16 => {
-                                verbynddichtemplate(data16);
-                                fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data17 => {
-                                  verbynddichtemplate(data17);
-                                  fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data18 => {
-                                    verbynddichtemplate(data18);
-                                    fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data19 => {
-                                      verbynddichtemplate(data19);
-                                      fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data20 => {
-                                        verbynddichtemplate(data20);
-                                      });
-                                    });
-                                  });
-                                });
-                              });
-                            });
-                          });
-                        });
-                      });
-                    });
-                  });
-                });
-              });
-            });
-          });
-        });
-      });
-    });
-  });
-});
+// fetchVerbynDichOffers( [...value.value,pagenum.toString()] ).then((data)=>
+//         {    
+         
+//           hasrun.value = false
+//           console.log("data",hasrun.value)
+//           console.log("data.lastPage",data.lastPage)
+//           data.lastPage=false
+//           data.lastPage = false 
+//           if(data.lastPage == false ){
+//             console.log("hihihi")
+//             hasrun.value = true
+//           var _listofdata:Product[] = listofdata.value
+//           _listofdata.push(data.product)
+//           _listofdata = removeDups<Product>(_listofdata)
+//           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
+//           pagenum++
+//           listofdata.value = _listofdata
+//           console.log("listofdata.value",listofdata.value)
+          
+// // i know this is not the WAY but i dont think it mattess on speed the problem is i dont know what the max number i tesed and they seem to be 10-15 so i set it to 20 it dosent matter if it stops at 10 because if it returns false all the others wont be called there is problaly some smarter way of doing it but this is MY way (: 
+// fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data1 => {
+//   verbynddichtemplate(data1);
+//   fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data2 => {
+//     verbynddichtemplate(data2);
+//     fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data3 => {
+//       verbynddichtemplate(data3);
+//       fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data4 => {
+//         verbynddichtemplate(data4);
+//         fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data5 => {
+//           verbynddichtemplate(data5);
+//           fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data6 => {
+//             verbynddichtemplate(data6);
+//             fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data7 => {
+//               verbynddichtemplate(data7);
+//               fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data8 => {
+//                 verbynddichtemplate(data8);
+//                 fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data9 => {
+//                   verbynddichtemplate(data9);
+//                   fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data10 => {
+//                     verbynddichtemplate(data10);
+//                     fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data11 => {
+//                       verbynddichtemplate(data11);
+//                       fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data12 => {
+//                         verbynddichtemplate(data12);
+//                         fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data13 => {
+//                           verbynddichtemplate(data13);
+//                           fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data14 => {
+//                             verbynddichtemplate(data14);
+//                             fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data15 => {
+//                               verbynddichtemplate(data15);
+//                               fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data16 => {
+//                                 verbynddichtemplate(data16);
+//                                 fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data17 => {
+//                                   verbynddichtemplate(data17);
+//                                   fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data18 => {
+//                                     verbynddichtemplate(data18);
+//                                     fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data19 => {
+//                                       verbynddichtemplate(data19);
+//                                       fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data20 => {
+//                                         verbynddichtemplate(data20);
+//                                       });
+//                                     });
+//                                   });
+//                                 });
+//                               });
+//                             });
+//                           });
+//                         });
+//                       });
+//                     });
+//                   });
+//                 });
+//               });
+//             });
+//           });
+//         });
+//       });
+//     });
+//   });
+// });
                                                       
-          }
-        }
-    ),
+//           }
+//         }
+//     ),
 
+
+  
+//      fetchWebWunderOffers(value.value ).then((data)=>
+//         {    
+//           var _listofdata:Product[] = listofdata.value
+//           _listofdata.push(...data)
+//           _listofdata = removeDups<Product>(_listofdata)
+//           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
+
+//           listofdata.value = _listofdata
+//         }
+//     ),
+// fetchBytemeOffers(value.value).then((data)=>
+//         {    
+//           var _listofdata:Product[] = listofdata.value
+//           _listofdata.push(...data)
+//           _listofdata = removeDups<Product>(_listofdata)
+//           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
+//           listofdata.value = _listofdata
+//         }
+//     ),  
+// fetchPingPerfectOffers(value.value).then((data)=>
+//         {    
+//           var _listofdata:Product[] = listofdata.value
+//           _listofdata.push(...data)
+//           _listofdata = removeDups<Product>(_listofdata)
+//           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
+
+//           listofdata.value = _listofdata
+//         }
+//     ),
 
 fetchServuSpeed(value.value).then((data)=>
 {
@@ -171,13 +198,14 @@ fetchServuSpeed(value.value).then((data)=>
           listofdata.value = _listofdata
 
 }  )
-*/
 
-    ]); // this is cool because it dosent care if one has an error or not it just runs whatever
+
+    ])
+    
+     // this is cool because it dosent care if one has an error or not it just runs whatever
     console.log(results)  // for later if results.map ... result.status != "fulfilled" error handling
 
-    }
-    hasrun.value = true
+   // }
   }
     updatelist()
     
@@ -187,7 +215,6 @@ fetchServuSpeed(value.value).then((data)=>
     var jsxElements: JSX.Element[] = [];
     for (const [key, value] of additonalist) {
 
-        for (const [key, value] of additonalist) {
           jsxElements.push(
         <>
               <div key={key} className="additional-item" style={ { marginRight: '5px' }}>
@@ -197,7 +224,7 @@ fetchServuSpeed(value.value).then((data)=>
         </>
 
           )
-        }}
+        }
      return jsxElements
   }
 
@@ -250,15 +277,15 @@ fetchServuSpeed(value.value).then((data)=>
 
 
 
-
       </>
     }
     console.log(listofdata.value.length)
     var filteredlist :Product[] = [];
+    var listofwiredstrings=["Fiber","FIBER","Cable","CABLE"]
     // filtering logic 
     if(filterSignal.value.wiredOnly){
 
-      filteredlist=  listofdata.value.filter(el => Number(el.speed) > filterSignal.value.speed && el.connectionType == "Fiber" && el.monthlyCostInCent >= filterSignal.value.minMonthlyPrice  && Number(el.contractDurationInMonths) >= filterSignal.value.minDuration );
+      filteredlist=  listofdata.value.filter(el => Number(el.speed) > filterSignal.value.speed && listofwiredstrings.includes(el.connectionType)   && el.monthlyCostInCent >= filterSignal.value.minMonthlyPrice  && Number(el.contractDurationInMonths) >= filterSignal.value.minDuration );
 
     }else{
        filteredlist=  listofdata.value.filter(el => Number(el.speed) > filterSignal.value.speed  && el.monthlyCostInCent >= filterSignal.value.minMonthlyPrice  && Number(el.contractDurationInMonths) >= filterSignal.value.minDuration );
@@ -283,7 +310,7 @@ fetchServuSpeed(value.value).then((data)=>
     return(
         <>
     <div class="container-fluid py-4">
-        <div class="row g-3 align-items-center bg-white rounded shadow-sm p-4 mb-4">
+        <div class="row g-3 align-items-center bg-white rounded shadow-sm p-1 mb-3">
             <div class="col-lg-3 col-md-6">
                 <label class="form-label text-muted fw-semibold small mb-2">
                     <i class="fas fa-tachometer-alt text-primary me-1"></i>
@@ -426,10 +453,10 @@ fetchServuSpeed(value.value).then((data)=>
                 </div>
             </div>
 
-            <div class="col-lg-2 col-md-6">
+            <div class="col-lg-1 col-md-6">
+                {showsharebutton.value}
 
             </div>
-
 
 
 
