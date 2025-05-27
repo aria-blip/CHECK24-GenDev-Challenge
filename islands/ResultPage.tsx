@@ -71,122 +71,119 @@ export default  function ResultPage({value}:Props) {
   //  if(hasrun.value == true){
     const results = await Promise.allSettled([
 
-// fetchVerbynDichOffers( [...value.value,pagenum.toString()] ).then((data)=>
-//         {    
+fetchVerbynDichOffers( [...value.value,pagenum.toString()] ).then((data)=>
+        {    
          
-//           hasrun.value = false
-//           console.log("data",hasrun.value)
-//           console.log("data.lastPage",data.lastPage)
-//           data.lastPage=false
-//           data.lastPage = false 
-//           if(data.lastPage == false ){
-//             console.log("hihihi")
-//             hasrun.value = true
-//           var _listofdata:Product[] = listofdata.value
-//           _listofdata.push(data.product)
-//           _listofdata = removeDups<Product>(_listofdata)
-//           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
-//           pagenum++
-//           listofdata.value = _listofdata
-//           console.log("listofdata.value",listofdata.value)
+          console.log("data.lastPage",data.lastPage)
+          data.lastPage=false
+          data.lastPage = false 
+          if(data.lastPage == false ){
+            console.log("hihihi")
+          var _listofdata:Product[] = listofdata.value
+          _listofdata.push(data.product)
+          _listofdata = removeDups<Product>(_listofdata)
+          _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
+          pagenum++
+          listofdata.value = _listofdata
+          console.log("listofdata.value",listofdata.value)
           
-// // i know this is not the WAY but i dont think it mattess on speed the problem is i dont know what the max number i tesed and they seem to be 10-15 so i set it to 20 it dosent matter if it stops at 10 because if it returns false all the others wont be called there is problaly some smarter way of doing it but this is MY way (: 
-// fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data1 => {
-//   verbynddichtemplate(data1);
-//   fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data2 => {
-//     verbynddichtemplate(data2);
-//     fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data3 => {
-//       verbynddichtemplate(data3);
-//       fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data4 => {
-//         verbynddichtemplate(data4);
-//         fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data5 => {
-//           verbynddichtemplate(data5);
-//           fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data6 => {
-//             verbynddichtemplate(data6);
-//             fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data7 => {
-//               verbynddichtemplate(data7);
-//               fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data8 => {
-//                 verbynddichtemplate(data8);
-//                 fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data9 => {
-//                   verbynddichtemplate(data9);
-//                   fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data10 => {
-//                     verbynddichtemplate(data10);
-//                     fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data11 => {
-//                       verbynddichtemplate(data11);
-//                       fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data12 => {
-//                         verbynddichtemplate(data12);
-//                         fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data13 => {
-//                           verbynddichtemplate(data13);
-//                           fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data14 => {
-//                             verbynddichtemplate(data14);
-//                             fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data15 => {
-//                               verbynddichtemplate(data15);
-//                               fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data16 => {
-//                                 verbynddichtemplate(data16);
-//                                 fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data17 => {
-//                                   verbynddichtemplate(data17);
-//                                   fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data18 => {
-//                                     verbynddichtemplate(data18);
-//                                     fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data19 => {
-//                                       verbynddichtemplate(data19);
-//                                       fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data20 => {
-//                                         verbynddichtemplate(data20);
-//                                       });
-//                                     });
-//                                   });
-//                                 });
-//                               });
-//                             });
-//                           });
-//                         });
-//                       });
-//                     });
-//                   });
-//                 });
-//               });
-//             });
-//           });
-//         });
-//       });
-//     });
-//   });
-// });
+// i know this is not the WAY but i dont think it mattess on speed the problem is i dont know what the max number i tesed and they seem to be 10-15 so i set it to 20 it dosent matter if it stops at 10 because if it returns false all the others wont be called there is problaly some smarter way of doing it but this is MY way (: 
+fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data1 => {
+  verbynddichtemplate(data1);
+  fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data2 => {
+    verbynddichtemplate(data2);
+    fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data3 => {
+      verbynddichtemplate(data3);
+      fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data4 => {
+        verbynddichtemplate(data4);
+        fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data5 => {
+          verbynddichtemplate(data5);
+          fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data6 => {
+            verbynddichtemplate(data6);
+            fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data7 => {
+              verbynddichtemplate(data7);
+              fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data8 => {
+                verbynddichtemplate(data8);
+                fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data9 => {
+                  verbynddichtemplate(data9);
+                  fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data10 => {
+                    verbynddichtemplate(data10);
+                    fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data11 => {
+                      verbynddichtemplate(data11);
+                      fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data12 => {
+                        verbynddichtemplate(data12);
+                        fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data13 => {
+                          verbynddichtemplate(data13);
+                          fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data14 => {
+                            verbynddichtemplate(data14);
+                            fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data15 => {
+                              verbynddichtemplate(data15);
+                              fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data16 => {
+                                verbynddichtemplate(data16);
+                                fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data17 => {
+                                  verbynddichtemplate(data17);
+                                  fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data18 => {
+                                    verbynddichtemplate(data18);
+                                    fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data19 => {
+                                      verbynddichtemplate(data19);
+                                      fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data20 => {
+                                        verbynddichtemplate(data20);
+                                      });
+                                    });
+                                  });
+                                });
+                              });
+                            });
+                          });
+                        });
+                      });
+                    });
+                  });
+                });
+              });
+            });
+          });
+        });
+      });
+    });
+  });
+});
                                                       
-//           }
-//         }
-//     ),
+          }
+        }
+    ),
 
 
   
-//      fetchWebWunderOffers(value.value ).then((data)=>
-//         {    
-//           var _listofdata:Product[] = listofdata.value
-//           _listofdata.push(...data)
-//           _listofdata = removeDups<Product>(_listofdata)
-//           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
+     fetchWebWunderOffers(value.value ).then((data)=>
+        {    
+          var _listofdata:Product[] = listofdata.value
+          _listofdata.push(...data)
+          _listofdata = removeDups<Product>(_listofdata)
+          _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
 
-//           listofdata.value = _listofdata
-//         }
-//     ),
-// fetchBytemeOffers(value.value).then((data)=>
-//         {    
-//           var _listofdata:Product[] = listofdata.value
-//           _listofdata.push(...data)
-//           _listofdata = removeDups<Product>(_listofdata)
-//           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
-//           listofdata.value = _listofdata
-//         }
-//     ),  
-// fetchPingPerfectOffers(value.value).then((data)=>
-//         {    
-//           var _listofdata:Product[] = listofdata.value
-//           _listofdata.push(...data)
-//           _listofdata = removeDups<Product>(_listofdata)
-//           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
+          listofdata.value = _listofdata
+        }
+    ),
+fetchBytemeOffers(value.value).then((data)=>
+        {    
+          var _listofdata:Product[] = listofdata.value
+          _listofdata.push(...data)
+          _listofdata = removeDups<Product>(_listofdata)
+          _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
+          listofdata.value = _listofdata
+        }
+    ),  
+fetchPingPerfectOffers(value.value).then((data)=>
+        {    
+          var _listofdata:Product[] = listofdata.value
+          _listofdata.push(...data)
+          _listofdata = removeDups<Product>(_listofdata)
+          _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
 
-//           listofdata.value = _listofdata
-//         }
-//     ),
+          listofdata.value = _listofdata
+        }
+    ),
 
 fetchServuSpeed(value.value).then((data)=>
 {
