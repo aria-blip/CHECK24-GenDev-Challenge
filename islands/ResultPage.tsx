@@ -6,6 +6,8 @@ import list from "npm:postcss@8.4.35/lib/list";
 import { JSX } from "preact/jsx-runtime";
 import {listofdata} from "./state.ts" // this is used to share states across different file
 import { VerbyndichResponse } from "./apicallmethod.ts";
+import LZString from 'lz-string';
+import { stringFromProductArray,productStringFromString } from "./apicallmethod.ts";
 // boilerplate
 
 var pagenum:number = 0
@@ -13,6 +15,8 @@ var pagenum:number = 0
 function removeDups<T>(array: T[]): T[] {
     return [...new Set(array)];
 }
+    console.log(LZString.compressToEncodedURIComponent("dssssssssssssd sda ad asd a          as f ad    adfjkah aaksdf a ah  kdflk als  alkdhs ald as alkf ah"))    
+
 function verbynddichtemplate(data:VerbyndichResponse){
           console.log("idnv "+ data.lastPage)
 
@@ -25,8 +29,36 @@ function verbynddichtemplate(data:VerbyndichResponse){
           listofdata.value = _listofdata
           }
 }
+
 function shareButtonClicked(){
-  alert("clicked")
+  
+  let listofdata_stringlist: string[][]=stringFromProductArray(listofdata.value)
+
+
+
+  let json_listofdata=JSON.stringify(listofdata_stringlist)
+
+    
+    console.log(json_listofdata.length)
+    console.log(LZString.compressToEncodedURIComponent(json_listofdata).length)    
+    console.log(LZString.compressToEncodedURIComponent(json_listofdata))    
+
+
+
+
+
+// import LZString from 'lz-string';
+
+// // Compress for URL
+// const compressed = LZString.compressToEncodedURIComponent(JSON.stringify(listofdata.value));
+// console.log('Original:', JSON.stringify(listofdata.value).length);
+// console.log('Compressed:', compressed.length);
+
+// // Decompress
+// const decompressed = JSON.parse(LZString.decompressFromEncodedURIComponent(compressed));
+
+
+
 }
 
 interface Props {
@@ -147,15 +179,9 @@ fetchVerbynDichOffers([...value.value, pagenum.toString()]).then(data1 => {
       });
     });
   });
-});
-                                                      
-          }
-        }
+});  } }
     ),
-
-
-  
-     fetchWebWunderOffers(value.value ).then((data)=>
+fetchWebWunderOffers(value.value ).then((data)=>
         {    
           var _listofdata:Product[] = listofdata.value
           _listofdata.push(...data)
@@ -184,7 +210,6 @@ fetchPingPerfectOffers(value.value).then((data)=>
           listofdata.value = _listofdata
         }
     ),
-
 fetchServuSpeed(value.value).then((data)=>
 {
           var _listofdata:Product[] = listofdata.value

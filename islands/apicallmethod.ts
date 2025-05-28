@@ -182,3 +182,51 @@ export async function fetchServuSpeed(value: string[]):Promise<Product[]> {
     return result.list
 
 }
+
+
+
+
+
+
+// here are the compresson and decompresson method used in Resultpoage to stringify the product list for shorter url
+
+// returns a stringed[][] from products this will be passed to the LZstring
+export function stringFromProductArray(products:Product[]):string[][]{
+  let listofdata_stringlist:string[][]=[]
+    for (let i of products) {
+      if(i.monthlyCostInCentFrom25thMonth==null){
+        i.monthlyCostInCentFrom25thMonth=0
+      }
+      listofdata_stringlist.push([
+        i.productId,
+        i.providerName,
+        i.speed,
+        i.monthlyCostInCent.toString(),
+        i.monthlyCostInCentFrom25thMonth.toString(),
+        i.discountInCent.toString(),
+        i.contractDurationInMonths,
+        i.connectionType,
+        JSON.stringify(i.additionalInfo)
+      ])
+    }
+    return listofdata_stringlist;
+}
+
+export function productStringFromString(stringlist:string[][]):Product[]{
+    const products: Product[] = [];
+  for (let row of stringlist) {
+    const product = new Product(
+      row[0], 
+      row[1], 
+      row[2], 
+      parseInt(row[3]),
+      parseInt(row[4]),
+      parseInt(row[5]),
+      row[6],
+      row[7],
+      JSON.parse(row[8]) 
+    );
+    products.push(product);
+  }
+  return products;
+}
