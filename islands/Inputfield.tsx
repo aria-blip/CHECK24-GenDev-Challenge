@@ -18,7 +18,12 @@ export default  function Inputfield({value}:Props) {
 var   pretextvalue = useSignal(["","","",""])
 var wantsfuber = useSignal(false)
 var clicked = useSignal(false)
+if( localStorage.getItem("adress")==null){
+console.log("first time ")
 
+}else{
+  pretextvalue.value=JSON.parse(localStorage.getItem("adress")!)
+}
 
 useEffect(() => {
       
@@ -47,44 +52,52 @@ return (
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="input-group shadow-sm" style="border-radius: 0.5rem; overflow: hidden;">
-                    <input type="text" onInput={(event:InputEvent) => {
+                    <input type="text" value={pretextvalue.value[0]}  onInput={(event:InputEvent) => {
                         const target = event.target as HTMLInputElement;
                         const cleanedValues = target.value.replace(/[^a-zA-ZäöüÄÖÜß\s]/g, '');
                         const updated = [...pretextvalue.value];
                         updated[0] = cleanedValues;
                         pretextvalue.value = updated; 
                         target.value = cleanedValues;
+                        localStorage.setItem("adress",JSON.stringify(pretextvalue.value));
+
                     }} id="inputli" class="form-control border-end-0" placeholder="Berliner str" style="border-radius: 0.5rem 0 0 0.5rem; border-right: none; box-shadow: none;" />
                     
-                    <input type="text" onInput={(event:InputEvent) => {
+                    <input type="text" value={pretextvalue.value[1]} onInput={(event:InputEvent) => {
                         const target = event.target as HTMLInputElement;
                         const cleanedValues = target.value.replace(/[^0-9]/g, '');
                         const updated = [...pretextvalue.value];
                         updated[1] = cleanedValues;
                         pretextvalue.value = updated;
                         target.value = cleanedValues;
-                    }} id="inputli" class="form-control border-start-0 border-end-0" placeholder="123" style="border-left: none; border-right: none; box-shadow: none;" />
+                        localStorage.setItem("adress",JSON.stringify(pretextvalue.value));
+
+                    }} id="inputli"  class="form-control border-start-0 border-end-0" placeholder="123" style="border-left: none; border-right: none; box-shadow: none;" />
                     
-                    <input type="text" onInput={(event:InputEvent) => {         
+                    <input type="text" value={pretextvalue.value[2]} onInput={(event:InputEvent) => {         
                         const target = event.target as HTMLInputElement;
                         const cleanedValues = target.value.replace(/[^a-zA-ZäöüÄÖÜß\s]/g, '');
                         const updated = [...pretextvalue.value];
                         updated[2] = cleanedValues;
                         pretextvalue.value = updated; 
                         target.value = cleanedValues;
+                        localStorage.setItem("adress",JSON.stringify(pretextvalue.value));
+
                     }} id="inputli" class="form-control border-start-0 border-end-0" placeholder="Berlin" style="border-left: none; border-right: none; box-shadow: none;" />
                     
-                    <input type="text" onInput={(event:InputEvent) => {            
+                    <input type="text"  value={pretextvalue.value[3]}  onInput={(event:InputEvent) => {            
                         const target = event.target as HTMLInputElement;
                         const cleanedValues = target.value.replace(/[^0-9]/g, '');
                         const updated = [...pretextvalue.value];
                         updated[3] = cleanedValues;
                         pretextvalue.value = updated; 
                         target.value = cleanedValues;
+                        localStorage.setItem("adress",JSON.stringify(pretextvalue.value));
+
                     }} id="inputli" class="form-control border-start-0" placeholder="51103" style=" border-left: none;border-right:none; box-shadow: none;" />
                                    
                                    
-                       <button class="btn btn-primary border-start-0" type="button"  onClick={(event) => {         
+                       <button class="btn btn-primary bg-secondary border-start-0" type="button"  onClick={(event) => {         
                         const target = event.target as HTMLInputElement;
                         clicked.value=clicked.value == false ? true : false
                         console.log("clicked", clicked.value)

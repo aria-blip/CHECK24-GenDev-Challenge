@@ -11,15 +11,17 @@ export default function Home({ url }: PageProps) {
       <div class="max-w-screen-md mx-auto flex flex-col items-center justify-center">
         <img
           class="my-6"
-          src="/logo.svg"
+          src="/internet.png"
           width="128"
           height="128"
           alt="the Fresh logo: a sliced lemon dripping with juice"
         />
-        <h1 class="text-4xl font-bold text-light " >Welcome to Fresh</h1>
+        <h1 class="text-4xl font-bold text-light " >Internet Provider Comparison</h1>
         <p class="my-4 text-light ">
-          Try updating this message in the {url.href}
-          <code class="mx-2 text-light ">./routes/index.tsx</code> file, and refresh.
+          Enter your Adress below 
+          <code class="mx-2 text-light ">↓</code> and <span class="text-warning
+
+">search</span>.
         </p>
 
         <Inputfield value={theoriginalvalue} />
