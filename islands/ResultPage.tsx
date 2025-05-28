@@ -15,7 +15,6 @@ var pagenum:number = 0
 function removeDups<T>(array: T[]): T[] {
     return [...new Set(array)];
 }
-    console.log(LZString.compressToEncodedURIComponent("dssssssssssssd sda ad asd a          as f ad    adfjkah aaksdf a ah  kdflk als  alkdhs ald as alkf ah"))    
 
 function verbynddichtemplate(data:VerbyndichResponse){
           console.log("idnv "+ data.lastPage)
@@ -30,19 +29,19 @@ function verbynddichtemplate(data:VerbyndichResponse){
           }
 }
 
-function shareButtonClicked(){
+async function shareButtonClicked(){
   
-  let listofdata_stringlist: string[][]=stringFromProductArray(listofdata.value)
 
 
 
-  let json_listofdata=JSON.stringify(listofdata_stringlist)
+  let json_listofdata=JSON.stringify(listofdata.value)
 
-    
-    console.log(json_listofdata.length)
-    console.log(LZString.compressToEncodedURIComponent(json_listofdata).length)    
-    console.log(LZString.compressToEncodedURIComponent(json_listofdata))    
+    const res = await fetch("/api/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value: ["9284",json_listofdata]}),
 
+      });
 
 
 
@@ -69,10 +68,11 @@ interface Props {
 export default  function ResultPage({value}:Props) {
 
   // here i define the signals these will be used to store and update data if there is user interaction
-  var sharebuttonelement=<> <> <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: #003366; border-color: #003366;" onClick={(event)=>{shareButtonClicked()}}>
+  var sharebuttonelement=<> <> <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: #003366; border-color: #003366;" onClick={async(event)=>{await shareButtonClicked()}}>
                             <img src="/linkshareicon.png"></img>
 </button></>   </>
   var showsharebutton = useSignal( <></> ) // at first the button is invisivle then when the user clicks on search the button will become visible TODO:check if atleast one of the api has returned then activate teh share button
+  var hasrun= false
 
   if(listofdata.value.length>=5){
     showsharebutton.value=sharebuttonelement
@@ -226,11 +226,12 @@ fetchServuSpeed(value.value).then((data)=>
     
      // this is cool because it dosent care if one has an error or not it just runs whatever
     console.log(results)  // for later if results.map ... result.status != "fulfilled" error handling
-
    // }
   }
     updatelist()
     
+
+
   }, [value.value]); // fetch when pretextvalue.value changes
 
   function createAdditionalElements(additonalist:string[][]):JSX.Element[]{

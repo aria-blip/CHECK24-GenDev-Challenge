@@ -7,6 +7,7 @@ export async function fetchWebWunderOffers(value: string[]):Promise<Product[]> {
         body: JSON.stringify({ value: value}),
       });
       const xmlText = await res.text();
+      
       const parser = new DOMParser();
       const xmlDoc = parser.parseFromString(xmlText, "text/xml");
     
