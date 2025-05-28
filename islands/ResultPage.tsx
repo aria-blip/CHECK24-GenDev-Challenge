@@ -4,79 +4,95 @@ import {fetchBytemeOffers,fetchWebWunderOffers,fetchPingPerfectOffers,fetchVerby
 import { Product } from "./product.ts";
 import list from "npm:postcss@8.4.35/lib/list";
 import { JSX } from "preact/jsx-runtime";
-import {listofdata} from "./state.ts" // this is used to share states across different file
+import {listofdata,shownotificatiponbox} from "./state.ts" // this is used to share states across different file
 import { VerbyndichResponse } from "./apicallmethod.ts";
 import LZString from 'lz-string';
-import { stringFromProductArray,productStringFromString } from "./apicallmethod.ts";
+import { stringFromProductArray,productStringFromString ,getRandomInt,removeDups,delay} from "./apicallmethod.ts";
 // boilerplate
 
 var pagenum:number = 0
+var filteredlist :Product[] = []; 
 
-function removeDups<T>(array: T[]): T[] {
-    return [...new Set(array)];
-}
+
 
 function verbynddichtemplate(data:VerbyndichResponse){
           console.log("idnv "+ data.lastPage)
 
-          if(data.lastPage == false){
+        if(data.lastPage == false){
                       var _listofdata:Product[] = listofdata.value
           _listofdata.push(data.product)
           _listofdata = removeDups<Product>(_listofdata)
           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
           pagenum ++
           listofdata.value = _listofdata
-          }
+          filteredlist=_listofdata // if the user would click the share button without fileting before then filteredlist would be [] to avod this we have to fill it also 
+
+         }
 }
 
-async function shareButtonClicked(){
+async function shareButtonClicked(url:string){
   
+    const urlroot = new URL(url).origin;
 
-
-
-  let json_listofdata=JSON.stringify(listofdata.value)
-
-    const res = await fetch("/api/save", {
+    const res = await fetch("/api/share", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ value: ["9284",json_listofdata]}),
+        body: JSON.stringify(filteredlist),
 
       });
+  
+    var link_id =await res.json()
+    shownotificatiponbox.value=true
+    await navigator.clipboard.writeText(urlroot+"?id="+link_id);
 
-
-
-
-// import LZString from 'lz-string';
-
-// // Compress for URL
-// const compressed = LZString.compressToEncodedURIComponent(JSON.stringify(listofdata.value));
-// console.log('Original:', JSON.stringify(listofdata.value).length);
-// console.log('Compressed:', compressed.length);
-
-// // Decompress
-// const decompressed = JSON.parse(LZString.decompressFromEncodedURIComponent(compressed));
-
-
+    await delay(2000);
+    shownotificatiponbox.value=false
 
 }
 
 interface Props {
 
     value: Signal<string[]>;
+    url:string
+    
   }
 
-export default  function ResultPage({value}:Props) {
+export default  function ResultPage({value,url}:Props) {
 
-  // here i define the signals these will be used to store and update data if there is user interaction
-  var sharebuttonelement=<> <> <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: #003366; border-color: #003366;" onClick={async(event)=>{await shareButtonClicked()}}>
+const sharebuttonelement=<> <> <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: #003366; border-color: #003366;" onClick={async(event)=>{await shareButtonClicked(url)}}>
                             <img src="/linkshareicon.png"></img>
 </button></>   </>
-  var showsharebutton = useSignal( <></> ) // at first the button is invisivle then when the user clicks on search the button will become visible TODO:check if atleast one of the api has returned then activate teh share button
-  var hasrun= false
 
+  var showsharebutton = useSignal( <></> ) // at first the button is invisivle then when the user clicks on search the button will become visible TODO:check if atleast one of the api has returned then activate teh share button
+  var hasrun=useSignal( false) // used to skip the first automaticly run useEffect when value.value gets inizilized
+
+
+
+  // here i define the signals these will be used to store and update data if there is user interaction
+
+
+  // this is the trigger to show the share button i chose to not wait untill all the api finish because that could take a long time ,this way the user can share it anytimee 
   if(listofdata.value.length>=5){
     showsharebutton.value=sharebuttonelement
   }
+
+  // this will run once the webpage is started and only run once it checks wether the link has an id parameter if it does it gets the shared products and displays it 
+  useEffect(()=>{
+      async function main() {
+
+  if(new URL(url).searchParams.get("id")){
+        const res = await fetch("/api/getShareData?id="+new URL(url).searchParams.get("id"), {
+            method: "GET",
+            headers: { "Content-Type": "application/json" },
+
+          });  
+          var result=await res.json()
+          listofdata.value=await result.data
+          filteredlist=await result.data
+  }
+      }
+      main()
+  },[])
 
 
   var filterSignal=useSignal({
@@ -85,9 +101,6 @@ export default  function ResultPage({value}:Props) {
     minMonthlyPrice: 0,
     minDuration: 0
   });
-
-
-
 
   var sortSignal = useSignal({
     sortBy: "",
@@ -99,6 +112,12 @@ export default  function ResultPage({value}:Props) {
     listofdata.value = []
      pagenum = 0
     async function updatelist() {
+
+    // when value.balue inizilizes it will run even if tehere was no valid "value change" this skips teh first itteration
+    if (!hasrun.value) {
+      hasrun.value = true;
+      return;
+    }
 
   //  if(hasrun.value == true){
     const results = await Promise.allSettled([
@@ -117,6 +136,8 @@ fetchVerbynDichOffers( [...value.value,pagenum.toString()] ).then((data)=>
           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
           pagenum++
           listofdata.value = _listofdata
+          filteredlist=_listofdata // if the user would click the share button without fileting before then filteredlist would be [] to avod this we have to fill it also 
+
           console.log("listofdata.value",listofdata.value)
           
 // i know this is not the WAY but i dont think it mattess on speed the problem is i dont know what the max number i tesed and they seem to be 10-15 so i set it to 20 it dosent matter if it stops at 10 because if it returns false all the others wont be called there is problaly some smarter way of doing it but this is MY way (: 
@@ -189,6 +210,8 @@ fetchWebWunderOffers(value.value ).then((data)=>
           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
 
           listofdata.value = _listofdata
+          filteredlist=_listofdata // if the user would click the share button without fileting before then filteredlist would be [] to avod this we have to fill it also 
+
         }
     ),
 fetchBytemeOffers(value.value).then((data)=>
@@ -198,6 +221,8 @@ fetchBytemeOffers(value.value).then((data)=>
           _listofdata = removeDups<Product>(_listofdata)
           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
           listofdata.value = _listofdata
+            filteredlist=_listofdata // if the user would click the share button without fileting before then filteredlist would be [] to avod this we have to fill it also 
+
         }
     ),  
 fetchPingPerfectOffers(value.value).then((data)=>
@@ -208,6 +233,8 @@ fetchPingPerfectOffers(value.value).then((data)=>
           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
 
           listofdata.value = _listofdata
+          filteredlist=_listofdata // if the user would click the share button without fileting before then filteredlist would be [] to avod this we have to fill it also 
+
         }
     ),
 fetchServuSpeed(value.value).then((data)=>
@@ -218,6 +245,7 @@ fetchServuSpeed(value.value).then((data)=>
           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
 
           listofdata.value = _listofdata
+          filteredlist=_listofdata // if the user would click the share button without fileting before then filteredlist would be [] to avod this we have to fill it also 
 
 }  )
 
@@ -303,9 +331,9 @@ fetchServuSpeed(value.value).then((data)=>
       </>
     }
     console.log(listofdata.value.length)
-    var filteredlist :Product[] = [];
     var listofwiredstrings=["Fiber","FIBER","Cable","CABLE"]
     // filtering logic 
+    
     if(filterSignal.value.wiredOnly){
 
       filteredlist=  listofdata.value.filter(el => Number(el.speed) > filterSignal.value.speed && listofwiredstrings.includes(el.connectionType)   && el.monthlyCostInCent >= filterSignal.value.minMonthlyPrice  && Number(el.contractDurationInMonths) >= filterSignal.value.minDuration );
@@ -504,7 +532,16 @@ fetchServuSpeed(value.value).then((data)=>
     
   </div>
 
-     
+     { shownotificatiponbox.value? <>
+        <div className="fixed inset-0 flex items-start justify-center pointer-events-none">
+          <div className="bg-blue-500 text-white px-6 py-4 rounded shadow-lg">
+            Link copied!
+          </div>
+        </div></>:<></>
+}
+
+
+
     </> 
   )    
 
