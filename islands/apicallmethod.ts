@@ -1,3 +1,4 @@
+import { JSX } from "preact/jsx-runtime";
 import { Product } from "./product.ts";
 
 export async function fetchWebWunderOffers(value: string[]):Promise<Product[]> {
@@ -125,8 +126,8 @@ export async function fetchPingPerfectOffers(value: string[]):Promise<Product[]>
             i.providerName,
             i.providerName,
             i.productInfo.speed.toString(),
-            i.pricingDetails.monthlyCostInCent,
-            i.pricingDetails.monthlyCostInCent,
+            i.pricingDetails.monthlyCostInCent /100,
+            i.pricingDetails.monthlyCostInCent /100,
             0,
             i.productInfo.contractDurationInMonths.toString(),
             i.productInfo.connectionType,
@@ -245,3 +246,6 @@ export function removeDups<T>(array: T[]): T[] {
 }
 
 export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+
+

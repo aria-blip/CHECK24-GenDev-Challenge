@@ -3,9 +3,14 @@ import Counter from "../islands/Counter.tsx";
 import Inputfield from "../islands/Inputfield.tsx";
 import ResultPage from "../islands/ResultPage.tsx";
 import { PageProps } from "$fresh/server.ts";
+import ComparisonBox from "../islands/ComparisonBox.tsx";
+import { Product } from "../islands/product.ts";
 
 export default function Home({ url }: PageProps) {
+  // here i define the signals that i share between two Islands
   const theoriginalvalue = useSignal(["","","",""]);
+  const twoselected=useSignal([new Product("-1"),new Product("-1")]) // this is teh signal for two selected ones that the user can choose and then compare they are both at first -1 so that i can check if the value==-1 and then i know which one to override
+
   return (
     <div class="px-4 py-8 mx-auto bg-[#11285c]">
       <div class="max-w-screen-md mx-auto flex flex-col items-center justify-center">
@@ -26,8 +31,9 @@ export default function Home({ url }: PageProps) {
 
         <Inputfield value={theoriginalvalue} />
 
-        
-        <ResultPage value={theoriginalvalue} url={url.href} />
+        <ResultPage value={theoriginalvalue} twoselected={twoselected} url={url.href} />#
+
+        <ComparisonBox twoselected={twoselected}   />ss
       </div>
     </div>
   );

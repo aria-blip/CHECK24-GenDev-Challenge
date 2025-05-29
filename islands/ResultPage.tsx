@@ -1,9 +1,9 @@
-import { useEffect } from "preact/hooks";
+import { useEffect, useRef } from "preact/hooks";
 import { useSignal ,Signal} from "@preact/signals";
 import {fetchBytemeOffers,fetchWebWunderOffers,fetchPingPerfectOffers,fetchVerbynDichOffers,fetchServuSpeed} from "./apicallmethod.ts" // this is the function that will be used to fetch the data from the api
 import { Product } from "./product.ts";
 import list from "npm:postcss@8.4.35/lib/list";
-import { JSX } from "preact/jsx-runtime";
+import { jsx, JSX } from "preact/jsx-runtime";
 import {listofdata,shownotificatiponbox} from "./state.ts" // this is used to share states across different file
 import { VerbyndichResponse } from "./apicallmethod.ts";
 import LZString from 'lz-string';
@@ -13,7 +13,22 @@ import { stringFromProductArray,productStringFromString ,getRandomInt,removeDups
 var pagenum:number = 0
 var filteredlist :Product[] = []; 
 
+export function createAdditionalElements(additonalist:string[][]):JSX.Element[]{
+    var jsxElements: JSX.Element[] = [];
+    for (const [key, value] of additonalist) {
 
+          jsxElements.push(
+        <>
+              <div key={key} className="additional-item" style={ { marginRight: '5px' }}>
+                  <span  className="additional-label">{key}:</span>
+                  <span className="additional-value">{value}</span>
+                </div>
+        </>
+
+          )
+        }
+     return jsxElements
+  }
 
 function verbynddichtemplate(data:VerbyndichResponse){
           console.log("idnv "+ data.lastPage)
@@ -54,21 +69,20 @@ interface Props {
 
     value: Signal<string[]>;
     url:string
+    twoselected:Signal<Product[]>   // we get this from index this same instance will also be shared to comparisonbox so if we change it here (a user chosses two boxes) it will get notified on comparisonBox.tsx
     
   }
 
-export default  function ResultPage({value,url}:Props) {
+export default  function ResultPage({value,url,twoselected}:Props) {
 
 const sharebuttonelement=<> <> <button class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; background-color: #003366; border-color: #003366;" onClick={async(event)=>{await shareButtonClicked(url)}}>
                             <img src="/linkshareicon.png"></img>
 </button></>   </>
+  // here i define the signals these will be used to store and update data if there is user interaction
 
   var showsharebutton = useSignal( <></> ) // at first the button is invisivle then when the user clicks on search the button will become visible TODO:check if atleast one of the api has returned then activate teh share button
   var hasrun=useSignal( false) // used to skip the first automaticly run useEffect when value.value gets inizilized
 
-
-
-  // here i define the signals these will be used to store and update data if there is user interaction
 
 
   // this is the trigger to show the share button i chose to not wait untill all the api finish because that could take a long time ,this way the user can share it anytimee 
@@ -262,31 +276,35 @@ fetchServuSpeed(value.value).then((data)=>
 
   }, [value.value]); // fetch when pretextvalue.value changes
 
-  function createAdditionalElements(additonalist:string[][]):JSX.Element[]{
-    var jsxElements: JSX.Element[] = [];
-    for (const [key, value] of additonalist) {
 
-          jsxElements.push(
-        <>
-              <div key={key} className="additional-item" style={ { marginRight: '5px' }}>
-                  <span  className="additional-label">{key}:</span>
-                  <span className="additional-value">{value}</span>
-                </div>
-        </>
-
-          )
-        }
-     return jsxElements
-  }
 
     function createelele(prod:Product,index:number):JSX.Element {
 
       return<>
 
-   <div key={`${prod.productId}-${index}`}  className="product-card">
+   <div key={`${prod.productId}-${index}`}  onClick={(event)=>{
+
+  if(twoselected.value[0].productId=="-1"){
+    twoselected.value=[filteredlist[index+1],new Product("-1")]
+    event.currentTarget.style.backgroundColor = 'lightblue'; 
+    console.log("sett")
+  }else{
+    console.log("second set")
+         event.currentTarget.style.backgroundColor = 'lightblue'; 
+
+    twoselected.value=[twoselected.value[0],filteredlist[index+1]]
+  }
+   const el = event.currentTarget;
+
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      el.style.backgroundColor = 'white';
+    }, 2000);
+  });
+   }} className="product-card">
         <div className="card-header">
           <div className="provider-name">{prod.providerName}</div>
-          <div className="product-id">ID: {prod.productId}</div>
+          <div className="product-id">ID:{index} {prod.productId}</div>
         </div>
         
         <div className="card-content">
@@ -353,7 +371,6 @@ fetchServuSpeed(value.value).then((data)=>
         })
 
     }
-
 
     const listofelements: JSX.Element[] = filteredlist.slice(1).map((prod: Product ,index: number) => {  // for some reason the first element was always null this is temporerel solution
       return createelele(prod,index)})

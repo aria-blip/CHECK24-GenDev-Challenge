@@ -14,6 +14,7 @@ import * as $api_verbyndich from "./routes/api/verbyndich.ts";
 import * as $api_webwunder from "./routes/api/webwunder.ts";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
+import * as $ComparisonBox from "./islands/ComparisonBox.tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $Inputfield from "./islands/Inputfield.tsx";
 import * as $ResultPage from "./islands/ResultPage.tsx";
@@ -38,6 +39,7 @@ const manifest = {
     "./routes/index.tsx": $index,
   },
   islands: {
+    "./islands/ComparisonBox.tsx": $ComparisonBox,
     "./islands/Counter.tsx": $Counter,
     "./islands/Inputfield.tsx": $Inputfield,
     "./islands/ResultPage.tsx": $ResultPage,
