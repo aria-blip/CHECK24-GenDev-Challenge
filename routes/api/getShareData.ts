@@ -1,5 +1,5 @@
   import { Handlers } from "$fresh/server.ts";
-import { getRandomInt } from "../../islands/apicallmethod.ts";
+import { getRandomInt } from "../../islands/apicallmethod.tsx";
 
 export const handler: Handlers = {
 

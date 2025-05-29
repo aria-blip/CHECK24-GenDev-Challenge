@@ -1,35 +1,20 @@
 import { useEffect, useRef } from "preact/hooks";
 import { useSignal ,Signal} from "@preact/signals";
-import {fetchBytemeOffers,fetchWebWunderOffers,fetchPingPerfectOffers,fetchVerbynDichOffers,fetchServuSpeed} from "./apicallmethod.ts" // this is the function that will be used to fetch the data from the api
+import {fetchBytemeOffers,fetchWebWunderOffers,fetchPingPerfectOffers,fetchVerbynDichOffers,fetchServuSpeed} from "./apicallmethod.tsx" // this is the function that will be used to fetch the data from the api
 import { Product } from "./product.ts";
 import list from "npm:postcss@8.4.35/lib/list";
 import { jsx, JSX } from "preact/jsx-runtime";
 import {listofdata,shownotificatiponbox} from "./state.ts" // this is used to share states across different file
-import { VerbyndichResponse } from "./apicallmethod.ts";
+import { VerbyndichResponse } from "./apicallmethod.tsx";
 import LZString from 'lz-string';
-import { stringFromProductArray,productStringFromString ,getRandomInt,removeDups,delay} from "./apicallmethod.ts";
+import { stringFromProductArray,productStringFromString ,getRandomInt,removeDups,delay,createAdditionalElements} from "./apicallmethod.tsx";
 // boilerplate
 
 var pagenum:number = 0
 var filteredlist :Product[] = []; 
 
-export function createAdditionalElements(additonalist:string[][]):JSX.Element[]{
-    var jsxElements: JSX.Element[] = [];
-    for (const [key, value] of additonalist) {
 
-          jsxElements.push(
-        <>
-              <div key={key} className="additional-item" style={ { marginRight: '5px' }}>
-                  <span  className="additional-label">{key}:</span>
-                  <span className="additional-value">{value}</span>
-                </div>
-        </>
-
-          )
-        }
-     return jsxElements
-  }
-
+// this is the function that will be run for each new reqquest for the verbyncdich api after one request in the .then thil will be run it gets the lasts request data witht the verbyndresonse this also icludes if  this is teh last request if it it is it stops this function is inside the  useeffect in the allsettled 
 function verbynddichtemplate(data:VerbyndichResponse){
           console.log("idnv "+ data.lastPage)
 
@@ -44,7 +29,7 @@ function verbynddichtemplate(data:VerbyndichResponse){
 
          }
 }
-
+// function for the share buttton that will be displayed once 5 elements are in fitlered lsit
 async function shareButtonClicked(url:string){
   
     const urlroot = new URL(url).origin;
@@ -65,6 +50,15 @@ async function shareButtonClicked(url:string){
 
 }
 
+
+
+
+
+
+
+
+
+// these are the values passed from index.tsx that are also shared to other islands to make sharing data apossible
 interface Props {
 
     value: Signal<string[]>;
@@ -257,6 +251,11 @@ fetchServuSpeed(value.value).then((data)=>
           _listofdata.push(...data)
           _listofdata = removeDups<Product>(_listofdata)
           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
+          
+          _listofdata.forEach((product) => {
+            product.monthlyCostInCent =Math.round( product.monthlyCostInCent/100);
+            product.monthlyCostInCentFrom25thMonth=Math.round(product.monthlyCostInCent/100)
+          });
 
           listofdata.value = _listofdata
           filteredlist=_listofdata // if the user would click the share button without fileting before then filteredlist would be [] to avod this we have to fill it also 
@@ -274,79 +273,79 @@ fetchServuSpeed(value.value).then((data)=>
     
 
 
-  }, [value.value]); // fetch when pretextvalue.value changes
+  }, [value.value]); // fetch when pretextvalue.value changes also when we get a valid adress this will be run i need useEffect because it us
 
 
-
+  // this is the layout for ta single product this will be added to thelistofelemts below 
     function createelele(prod:Product,index:number):JSX.Element {
 
-      return<>
+    return<>
 
-   <div key={`${prod.productId}-${index}`}  onClick={(event)=>{
+        <div key={`${prod.productId}-${index}`}  onClick={(event)=>{
 
-  if(twoselected.value[0].productId=="-1"){
-    twoselected.value=[filteredlist[index+1],new Product("-1")]
-    event.currentTarget.style.backgroundColor = 'lightblue'; 
-    console.log("sett")
-  }else{
-    console.log("second set")
-         event.currentTarget.style.backgroundColor = 'lightblue'; 
+        if(twoselected.value[0].productId=="-1"){
+          twoselected.value=[filteredlist[index+1],new Product("-1")]
+          event.currentTarget.style.backgroundColor = 'lightblue'; 
+          console.log("sett")
+        }else{
+          console.log("second set")
+              event.currentTarget.style.backgroundColor = 'lightblue'; 
 
-    twoselected.value=[twoselected.value[0],filteredlist[index+1]]
-  }
-   const el = event.currentTarget;
+          twoselected.value=[twoselected.value[0],filteredlist[index+1]]
+        }
+        const el = event.currentTarget;
 
-  requestAnimationFrame(() => {
-    setTimeout(() => {
-      el.style.backgroundColor = 'white';
-    }, 2000);
-  });
-   }} className="product-card">
-        <div className="card-header">
-          <div className="provider-name">{prod.providerName}</div>
-          <div className="product-id">ID:{index} {prod.productId}</div>
-        </div>
-        
-        <div className="card-content">
-          <div className="info-item">
-            <span className="info-label">Speed:</span>
-            <span className="info-value">{prod.speed}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">Monthly:</span>
-            <span className="info-value">{prod.monthlyCostInCent}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">25th Month:</span>
-            <span className="info-value">{prod.monthlyCostInCentFrom25thMonth}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">Discount:</span>
-            <span className="info-value">{prod.discountInCent}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">Duration:</span>
-            <span className="info-value">{prod.contractDurationInMonths}</span>
-          </div>
-          <div className="info-item">
-            <span className="info-label">Type:</span>
-            <span className="info-value">{prod.connectionType}</span>
-          </div>
-        </div>
-        
-        <div className="additional-info">
-          
-          <div className="additional-item">
-          {createAdditionalElements(prod.additionalInfo)}
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            el.style.backgroundColor = 'white';
+          }, 2000);
+        });
+        }} className="product-card">
+              <div className="card-header">
+                <div className="provider-name">{prod.providerName}</div>
+                <div className="product-id">ID:{index} {prod.productId}</div>
+              </div>
+              
+              <div className="card-content">
+                <div className="info-item">
+                  <span className="info-label">Speed:</span>
+                  <span className="info-value">{prod.speed}</span>
+                </div>
+                <div className="info-item">
+                  <span className="info-label">Monthly:</span>
+                  <span className="info-value">{prod.monthlyCostInCent}</span>
+                </div>
+                <div className="info-item">
+                  <span className="info-label">25th Month:</span>
+                  <span className="info-value">{prod.monthlyCostInCentFrom25thMonth}</span>
+                </div>
+                <div className="info-item">
+                  <span className="info-label">Discount:</span>
+                  <span className="info-value">{prod.discountInCent}</span>
+                </div>
+                <div className="info-item">
+                  <span className="info-label">Duration:</span>
+                  <span className="info-value">{prod.contractDurationInMonths}</span>
+                </div>
+                <div className="info-item">
+                  <span className="info-label">Type:</span>
+                  <span className="info-value">{prod.connectionType}</span>
+                </div>
+              </div>
+              
+              <div className="additional-info">
+                
+                <div className="additional-item">
+                {createAdditionalElements(prod.additionalInfo)}
 
-          </div>
-        </div>
-      </div>
-
-
+                </div>
+              </div>
+            </div>
 
 
-      </>
+
+
+            </>
     }
     console.log(listofdata.value.length)
     var listofwiredstrings=["Fiber","FIBER","Cable","CABLE"]
@@ -371,12 +370,16 @@ fetchServuSpeed(value.value).then((data)=>
         })
 
     }
-
+    // listofelemetns is a list is the frontend implementation ofour filteredlist it created divs this will be returned in the return at the end to the index.tsx
     const listofelements: JSX.Element[] = filteredlist.slice(1).map((prod: Product ,index: number) => {  // for some reason the first element was always null this is temporerel solution
       return createelele(prod,index)})
  
+
+
+      // this is the returning page 
     return(
         <>
+        {/* this is the filtering and soring section it looks messy it would have been smarter adding a island just for this TODO for later */}
     <div class="container-fluid py-4">
         <div class="row g-3 align-items-center bg-white rounded shadow-sm p-1 mb-3">
             <div class="col-lg-3 col-md-6">
@@ -477,8 +480,7 @@ fetchServuSpeed(value.value).then((data)=>
             </div>
 
           
-          {//    the sorting inputs are here  }
-}
+ 
           <div class="col-lg-2 col-md-6">
                 <label class="form-label text-muted fw-semibold small mb-2">
                     <i class="fas fa-sort text-secondary me-1"></i>
@@ -543,6 +545,7 @@ fetchServuSpeed(value.value).then((data)=>
 
  <div className="products-container">
     <div className="products-grid">
+      {/* all the items are here  */}
       {listofelements}
     </div>
     

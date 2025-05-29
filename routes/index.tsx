@@ -1,5 +1,4 @@
 import { useSignal } from "@preact/signals";
-import Counter from "../islands/Counter.tsx";
 import Inputfield from "../islands/Inputfield.tsx";
 import ResultPage from "../islands/ResultPage.tsx";
 import { PageProps } from "$fresh/server.ts";

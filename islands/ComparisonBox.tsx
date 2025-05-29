@@ -2,7 +2,7 @@ import { useEffect } from "preact/hooks";
 import { useSignal ,Signal} from "@preact/signals";
 import { Product } from "./product.ts";
 import { JSX } from "preact/jsx-runtime";
-import { createAdditionalElements } from "./ResultPage.tsx";    
+import { createAdditionalElements } from "./apicallmethod.tsx";    
 // this iss an input field in an island because it requires user interaction gets a shared state with ResultPage from index.tsx which means 
 // we where to change things here like edit a value it the Inputfield section ill immidiently react , this is good because we can then
 // first check if the input is a valid adress then send it ( so changing the value Signal )

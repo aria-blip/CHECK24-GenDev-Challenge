@@ -249,3 +249,24 @@ export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, 
 
 
 
+export function createAdditionalElements(additonalist:string[][]):JSX.Element[]{
+    var jsxElements: JSX.Element[] = [];
+    for (const [key, value] of additonalist) {
+
+          jsxElements.push(
+        <>
+              <div key={key} className="additional-item" style={ { marginRight: '5px' }}>
+                  <span  className="additional-label">{key}:</span>
+                  <span className="additional-value">{value}</span>
+                </div>
+        </>
+
+          )
+        }
+     return jsxElements
+  }
+
+
+
+
+  
