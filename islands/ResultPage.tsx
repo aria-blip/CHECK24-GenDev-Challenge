@@ -19,9 +19,11 @@ function verbynddichtemplate(data:VerbyndichResponse){
 
         if(data.lastPage == false){
                       var _listofdata:Product[] = listofdata.value
+          
           _listofdata.push(data.product)
           _listofdata = removeDups<Product>(_listofdata)
           _listofdata = _listofdata.filter((prod) => prod.productId != ""); // remove products with 0 cost
+
           pagenum ++
           listofdata.value = _listofdata
           filteredlist=_listofdata // if the user would click the share button without fileting before then filteredlist would be [] to avod this we have to fill it also 

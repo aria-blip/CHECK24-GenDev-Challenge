@@ -37,7 +37,7 @@ export async function fetchWebWunderOffers(value: string[]):Promise<Product[]> {
     
 }
 
-//  fix: i rewrote it my self . --- for me try to learn "/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g" DONE
+//  fix: i rewrote it  . --- for me try to learn "/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g" DONE
 function parseCsvToProducts(csv: string): Product[] {
   const lines = csv.trim().split("\n");
   const seenProductIds = new Set<string>();
@@ -78,6 +78,7 @@ function parseCsvToProducts(csv: string): Product[] {
   }
   var discount:number=0
   if(voucherType.length<3){ // check if it s precent 
+    console.log("jjjjjjjjjjjjjjjjjjj",voucherType)
     discount=Number(voucherType)*( Number(monthlyCostInCent) / 100)
   }else{
     discount= Number(line.slice(-5)) / 1000

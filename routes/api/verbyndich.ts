@@ -127,7 +127,7 @@ const discountMatch = resultt.description.match(/Rabatt von\s+(\d+)\s*€/i);
       additionalInfolist.push(["Data Cap", dataCap]);
     }
     if(maxDiscount.length < 5){
-      additionalInfolist.push(["Max Discount", maxDiscount]);
+      additionalInfolist.push(["Max Discount", (Math.round(maxDiscount/10)).toString()]);
     }
     if(orderMinimum !== null){
       additionalInfolist.push(["Order Minimum", orderMinimum.toString()+"€"]);
