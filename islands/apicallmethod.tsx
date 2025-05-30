@@ -80,9 +80,9 @@ function parseCsvToProducts(csv: string): Product[] {
      
   console.log("jjjjjjjjjjjjjjjjjjj",voucherType)
 
-  if(maxAge=="precent"){ // check if it s precent 
+  if(maxAge=="percentage"){ // check if it s precent 
     console.log("jjjjjjjjjjjjjjjjjjj",voucherType)
-    discount=Number(voucherType)*( Number(monthlyCostInCent) / 100)
+    discount=Math.round(Number(voucherType)*( Number(monthlyCostInCent) / 100))
   }else{
     discount=Math.round( Number(line.slice(-5)) / 1000)
   }
