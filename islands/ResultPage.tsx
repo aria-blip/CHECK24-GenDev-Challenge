@@ -6,7 +6,6 @@ import list from "npm:postcss@8.4.35/lib/list";
 import { jsx, JSX } from "preact/jsx-runtime";
 import {listofdata,shownotificatiponbox} from "./state.ts" // this is used to share states across different file
 import { VerbyndichResponse } from "./apicallmethod.tsx";
-import LZString from 'lz-string';
 import { stringFromProductArray,productStringFromString ,getRandomInt,removeDups,delay,createAdditionalElements} from "./apicallmethod.tsx";
 // boilerplate
 
