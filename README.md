@@ -99,7 +99,7 @@ a  `additionalInfo:string[][] = []` because eachprovider has different or no add
 
 ## Deploy
 
-the site is hosted via Deno Deploy [site]()
+the site is hosted via Deno Deploy [site](https://internetprovider-4qht92m6jxnv.deno.dev/)
 
 ## Deploy
 - if you compile this project make sure to run it with --unstable-kv  `deno task --unstable-kv start`
