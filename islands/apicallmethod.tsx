@@ -77,11 +77,14 @@ function parseCsvToProducts(csv: string): Product[] {
         providerName=parts[1]
   }
   var discount:number=0
-  if(voucherType.length<3){ // check if it s precent 
+     
+  console.log("jjjjjjjjjjjjjjjjjjj",voucherType)
+
+  if(maxAge=="precent"){ // check if it s precent 
     console.log("jjjjjjjjjjjjjjjjjjj",voucherType)
     discount=Number(voucherType)*( Number(monthlyCostInCent) / 100)
   }else{
-    discount= Number(line.slice(-5)) / 1000
+    discount=Math.round( Number(line.slice(-5)) / 1000)
   }
   
     products.push({
