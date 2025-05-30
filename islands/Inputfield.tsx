@@ -18,12 +18,18 @@ export default  function Inputfield({value}:Props) {
 var   pretextvalue = useSignal(["","","",""])
 var wantsfuber = useSignal(false)
 var clicked = useSignal(false)
-if( localStorage.getItem("adress")==null){
+// localStorage  only exists in browser useEffect forces fresh to run this only at a client level 
+useEffect(()=>{
+
+  if( localStorage.getItem("adress")==null){
 console.log("first time ")
 
 }else{
   pretextvalue.value=JSON.parse(localStorage.getItem("adress")!)
 }
+},[])
+
+
 
 useEffect(() => {
       
