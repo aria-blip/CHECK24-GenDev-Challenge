@@ -105,7 +105,7 @@ export default  function ComparisonBox({twoselected}:Props) {
                 </div>
                 
                 <div class="additional-info">
-                    <div class="additional-item">
+                    <div class="additional-grid">
 
                             {createAdditionalElements(twoselected.value[0].additionalInfo)}
                     </div>
@@ -149,8 +149,9 @@ export default  function ComparisonBox({twoselected}:Props) {
                     </div>
                 </div>
                 
+
                 <div class="additional-info">
-                    <div class="additional-item">
+                    <div class="additional-grid">
                             {createAdditionalElements(twoselected.value[1].additionalInfo)}
                     </div>
                 </div>

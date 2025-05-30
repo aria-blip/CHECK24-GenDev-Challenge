@@ -253,7 +253,7 @@ fetchServuSpeed(value.value).then((data)=>
           
           _listofdata.forEach((product) => {
             product.monthlyCostInCent =Math.round( product.monthlyCostInCent/100);
-            product.monthlyCostInCentFrom25thMonth=Math.round(product.monthlyCostInCent/100)
+            product.monthlyCostInCentFrom25thMonth=product.monthlyCostInCent
           });
 
           listofdata.value = _listofdata
@@ -308,23 +308,23 @@ fetchServuSpeed(value.value).then((data)=>
               <div className="card-content">
                 <div className="info-item">
                   <span className="info-label">Speed:</span>
-                  <span className="info-value">{prod.speed}</span>
+                  <span className="info-value">{prod.speed} Mbps</span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Monthly:</span>
-                  <span className="info-value">{prod.monthlyCostInCent}</span>
+                  <span className="info-value">{prod.monthlyCostInCent} €</span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">25th Month:</span>
-                  <span className="info-value">{prod.monthlyCostInCentFrom25thMonth}</span>
+                  <span className="info-value">{prod.monthlyCostInCentFrom25thMonth} €</span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Discount:</span>
-                  <span className="info-value">{prod.discountInCent}</span>
+                  <span className="info-value">{prod.discountInCent} €</span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Duration:</span>
-                  <span className="info-value">{prod.contractDurationInMonths}</span>
+                  <span className="info-value">{prod.contractDurationInMonths} mo</span>
                 </div>
                 <div className="info-item">
                   <span className="info-label">Type:</span>
@@ -332,13 +332,11 @@ fetchServuSpeed(value.value).then((data)=>
                 </div>
               </div>
               
-              <div className="additional-info">
-                
-                <div className="additional-item">
-                {createAdditionalElements(prod.additionalInfo)}
-
-                </div>
-              </div>
+<div className="additional-info">
+  <div className="additional-grid">
+    {createAdditionalElements(prod.additionalInfo)}
+  </div>
+</div>
             </div>
 
 
@@ -438,7 +436,7 @@ fetchServuSpeed(value.value).then((data)=>
                 </label>
                 <div class="input-group input-group-sm">
                     <span class="input-group-text bg-warning text-dark border-0">
-                        $
+                        €
                     </span>
                     <input 
                         type="number" 

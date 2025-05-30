@@ -40,6 +40,8 @@ useEffect(() => {
     if(pretextvalue.value[3].length == 5 && pretextvalue.value[1].length <= 3){
       pretextvalue.value[4] = wantsfuber.value.toString()
       console.log("pretextvalue.value", pretextvalue.value)
+      localStorage.setItem("adress",JSON.stringify(["","","",""])); // this resets the safed adress avoiding a loop
+
       value.value = pretextvalue.value
     }else{
       alert("Please enter a valid address with a 5-digit postal code and a house number of up to 3 digits.");

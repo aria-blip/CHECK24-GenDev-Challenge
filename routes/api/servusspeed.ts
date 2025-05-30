@@ -56,7 +56,7 @@ listofproducts.push(
     productDetails.productInfo.speed.toString(),
     productDetails.pricingDetails.monthlyCostInCent.toString(),
     0,
-    productDetails.discount/100,
+    productDetails.discount/1000,
     productDetails.productInfo.contractDurationInMonths.toString(),
     productDetails.productInfo.connectionType,
     [

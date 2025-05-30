@@ -142,7 +142,7 @@ const discountMatch = resultt.description.match(/Rabatt von\s+(\d+)\s*€/i);
                 speed,
                 parseInt(monthlyPrice),
                 parseInt(finalMonthlyPrice),
-              seconddiscount == null ? (parseInt(discount) / 100) * parseInt(monthlyPrice) : seconddiscount*10,
+              seconddiscount == null ? (parseInt(discount) / 100) * parseInt(monthlyPrice) : seconddiscount/100,
                 contractDuration,
                 Connectiontype,
                 

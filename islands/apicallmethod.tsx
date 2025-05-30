@@ -24,7 +24,7 @@ export async function fetchWebWunderOffers(value: string[]):Promise<Product[]> {
           speed: get("ns2:speed"),
           monthlyCostInCent: Number(get("ns2:monthlyCostInCent")) / 100,
           monthlyCostInCentFrom25thMonth: Number(get("ns2:monthlyCostInCentFrom25thMonth")) / 100,
-          discountInCent: Number(get("ns2:discountInCent")) / 100,
+          discountInCent: Number(get("ns2:discountInCent")) / 1000,
           contractDurationInMonths: get("ns2:contractDurationInMonths"),
           connectionType: get("ns2:connectionType"),
           additionalInfo:[]
@@ -37,7 +37,7 @@ export async function fetchWebWunderOffers(value: string[]):Promise<Product[]> {
     
 }
 
-// THIS METHOD WAS WRITTEN BY AI , I DID NOT WRITE THIS . --- for me try to learn "/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g" after deathline
+//  fix: i rewrote it my self . --- for me try to learn "/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g" DONE
 function parseCsvToProducts(csv: string): Product[] {
   const lines = csv.trim().split("\n");
   const seenProductIds = new Set<string>();
@@ -47,8 +47,8 @@ function parseCsvToProducts(csv: string): Product[] {
     const values = Array.from(
       line.matchAll(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g)
     ).map((match) => match[0].replace(/^"|"$/g, ""));
-
-    const [
+// TODO make only providerName var 
+    var [
       productId,
       providerName,
       speed,
@@ -68,23 +68,41 @@ function parseCsvToProducts(csv: string): Product[] {
     if (seenProductIds.has(productId)) continue;
     seenProductIds.add(productId);
     console.log("productId", line, productId, providerName, speed, monthlyCostInCent, afterTwoYearsMonthlyCost, durationInMonths, connectionType, installationService, tv, limitFrom, maxAge, voucherType, voucherValue)
+   
+      // the providername sometimes has an , and sometimes dosent which messes up the list if it messes up it just gives the speed number so if it is a number i know it meesed up in that case i refactor it using commas and get the [1] second 
+      if (!isNaN(Number(providerName)) && providerName?.trim() !== '') {
+        
+        const parts = line.split(',');
+        console.log(parts)
+        providerName=parts[1]
+  }
+  var discount:number=0
+  if(voucherType.length<3){ // check if it s precent 
+    discount=Number(voucherType)*( Number(monthlyCostInCent) / 100)
+  }else{
+    discount= Number(line.slice(-5)) / 1000
+  }
+  
     products.push({
       productId,
       providerName,
       speed,
       monthlyCostInCent: Number(monthlyCostInCent) / 100,
       monthlyCostInCentFrom25thMonth: Number(afterTwoYearsMonthlyCost) / 100,
-      discountInCent: Number(line.slice(-5)) / 100,
+      discountInCent:discount,
       contractDurationInMonths: (durationInMonths),
       connectionType,
       additionalInfo: [
         ["installationService", installationService],
         ["tv", tv],
         ["limitFrom", limitFrom],
-        ["maxAge", maxAge],
-        ["voucherType", voucherType],
+        ["Vouchervalue", voucherType],
+        ["voucherType", maxAge],
       ]
-    });
+    })
+
+    
+    ;
   }
   products.filter((prod) => prod.providerName); // pls work i knownt know why therere is a undefined in my fnal list ):
   return products;
@@ -250,20 +268,21 @@ export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, 
 
 
 export function createAdditionalElements(additonalist:string[][]):JSX.Element[]{
-    var jsxElements: JSX.Element[] = [];
-    for (const [key, value] of additonalist) {
-
-          jsxElements.push(
-        <>
-              <div key={key} className="additional-item" style={ { marginRight: '5px' }}>
-                  <span  className="additional-label">{key}:</span>
-                  <span className="additional-value">{value}</span>
-                </div>
-        </>
-
-          )
-        }
-     return jsxElements
+ const jsxElements: JSX.Element[] = [];
+  
+  for (const [key, value] of additonalist) {
+    jsxElements.push(
+      <div
+        key={key}
+        className="additional-item"
+      >
+        <span className="additional-label">{key}:</span>
+        <span className="additional-value">{value}</span>
+      </div>
+    );
+  }
+  
+  return jsxElements;
   }
 
 
